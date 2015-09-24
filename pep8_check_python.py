@@ -106,7 +106,7 @@ def main(paths=["."]):
 
     ignore = []
     ignore.append("E501")  # Ignore line length violations.
-    ignore.append("E226")  # Ignore too many leading # in comment block.
+    ignore.append("E266")  # Ignore too many leading # in comment block.
 
     critical = []
     critical.append("E301")  # expected 1 blank line, found 0

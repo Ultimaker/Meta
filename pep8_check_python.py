@@ -136,7 +136,7 @@ class XmlReport(pep8.StandardReport):
 
         if len(self._error_files) < 1:
             # Add a single test that is always succesful, as jenkins will complain if there are no tests found at all.
-            testsuite = ElementTree.SubElement(xml, "testsuite", {"name": filename, "errors": "0", "tests": "1", "failures": "0", "time": "0", "timestamp":"2013-05-24T10:23:58"})
+            testsuite = ElementTree.SubElement(xml, "testsuite", {"name": "success", "errors": "0", "tests": "1", "failures": "0", "time": "0", "timestamp":"2013-05-24T10:23:58"})
             testsuite.text = "\n"
             testsuite.tail = "\n"
             testcase = ElementTree.SubElement(testsuite, "testcase", {"classname": "success", "name": "success"})

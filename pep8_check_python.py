@@ -123,9 +123,13 @@ class XmlReport(pep8.StandardReport):
         xml = ElementTree.Element("testsuites")
         xml.text = "\n"
         for filename, data in self._error_files.items():
-            testsuite = ElementTree.SubElement(xml, "testsuite", {"name": filename, "errors": "0", "tests": str(len(data)), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
+            testsuite = ElementTree.SubElement(xml, "testsuite", {"name": filename, "errors": "0", "tests": str(len(data)+1), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
             testsuite.text = "\n"
             testsuite.tail = "\n"
+            # Add a single test that is always succesful, as jenkins will complain if there are no tests found at all.
+            testcase = ElementTree.SubElement(testsuite, "testcase", {"classname": "success", "name": "success"})
+            testcase.text = "\n"
+            testcase.tail = "\n"
             for line_number, text, lines in data:
                 testcase = ElementTree.SubElement(testsuite, "testcase", {"classname": "%s.line_%d" % (filename, line_number), "name": text})
                 testcase.text = "\n"

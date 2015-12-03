@@ -6,6 +6,7 @@ Note that not all the code convention described here have been fully implemented
 Code Conventions
 =======
 Below all code conventions which must be followed in all newly committed code.
+The next section is on guidelines, which are allowed to be broken in certain cases.
 
 Bracketing and indenting
 -----
@@ -49,6 +50,8 @@ public:
 
 Enums
 ----
+For C++, always use enum classes; never plain enums. Use UpperCamelCase for enum names and UPPER_CASE for the values.
+
 Example:
 ~~~~~~~~~~~~~~~{.cpp}
 enum class EnumExample 
@@ -59,7 +62,6 @@ enum class EnumExample
 
 EnumExample var = EnumExample::ELEM0; // call enum value via the scope of the enum class
 ~~~~~~~~~~~~~~~
-For C++, always use enum classes; never plain enums. Use UpperCamelCase for enum names and UPPER_CASE for the values.
 
 Files
 --------
@@ -73,7 +75,7 @@ Example for a file CuraEngine/src/foldr/SomeClass.h (UpperCamelCase):
 #endif//FOLDR_SOME_CLASS_H
 ~~~~~~~~~~~~~~~
 Each header file must include a header guard as shown above. The defined macro is adopted from the path and name of the class and must follow the rules for macros (UPPER_CASE).
-Here the folder `src` is skipped, because all cheader and implementation files of CuraEngine are in `src`.
+Here the folder `src` is skipped, because all header and implementation files of CuraEngine are in `src`.
 
 Null pointer 
 ----
@@ -90,6 +92,7 @@ Ordering
 
 Illegal syntax
 ----
+Here's some example of what is ***not*** allowed in any newly committed code:
 ~~~~~~~~~~~~~~~{.cpp}
 void function()
 {
@@ -98,16 +101,15 @@ void function()
 }; // unneccesary semicolon after function definition is not allowed
 ~~~~~~~~~~~~~~~
 
+White Space
+----
+ * Don't leave trailing spaces at the end of a line.
+ * Don't use tabs; use 4 spaces instead.
 
 
 Code Guidelines
 ====
 Below are a couple of guidelines which should generally be followed, unless there's good reason.
-
-White Space
-----
- * Don't leave trailing spaces at the end of a line.
- * Don't use tabs; use 4 spaces instead.
 
 Implementation
 ----
@@ -117,7 +119,7 @@ Sometimes including the implementation in the header file can make it easier for
 
 Class Files
 ----
-It is generally preferred to have each class in its own file with a filename corrseponding to the calss name.
+It is generally preferred to have each class in its own file with a filename corrseponding to the class name.
 
 Pointers vs. References
 -----

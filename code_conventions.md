@@ -1,6 +1,11 @@
+This document describes the code conventions and guidelines to be followed in Ultimaker C and C++ code.
+
+Note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
+
+
 Code Conventions
 =======
-Note that not all the code convention described here have been fully implemented yet.
+Below all code conventions which must be followed in all newly committed code.
 
 Bracketing and indenting
 -----
@@ -15,54 +20,94 @@ else // else on new line
 }
 ~~~~~~~~~~~~~~~
 
+Brackets may never be omitted. The opening and closing bracket should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`). 
+Any code within the brackets must be indented to one indentation level further. Indentation levels differ by 4 spaces.
+
 Naming conventions
 ------
  * variables: lower_case_with_underscores
- * functions: loweCamelCase
+ * functions: lowerCamelCase
  * classes: UpperCamelCase
  * macros: UPPER_CASE_WITH_UNDERSCORES
+
+Example:
 ~~~~~~~~~~~~~~~{.cpp}
 #define UPPER_CASE_MACRO 1
 
-class UpperCamelCase
+class UpperCamelCaseClass
 {
 private:
     MemberVariableObject with_underscores;
-public:
-    MemberVariableObject with_underscores;
 
 public:
-    UpperCamelCase();
-    ~UpperCamelCase();
-    
-    // start with input variable(s) and end with output variable(s)
-    void lowerCamelCaseFunctions(ParamObject& also_with_underscores)
+    void lowerCamelCaseFunction(ParamObject& also_with_underscores)
     {
         LocalObject under_scores;
     }
-private:
-    void putFunctionsAndVariablesInSeperatePublicPrivateBlocks();
 };
 ~~~~~~~~~~~~~~~
 
+Enums
+----
+Example:
+~~~~~~~~~~~~~~~{.cpp}
+enum class EnumExample 
+{
+    ELEM0 = 0,
+    ELEM1 = 1
+};
+
+EnumExample var = EnumExample::ELEM0; // call enum value via the scope of the enum class
+~~~~~~~~~~~~~~~
+For C++, always use enum classes; never plain enums. Use UpperCamelCase for enum names and UPPER_CASE for the values.
+
+Files
+--------
+Example for a file CuraEngine/src/foldr/SomeClass.h (UpperCamelCase):
+~~~~~~~~~~~~~~~{.cpp}
+#ifndef FOLDR_SOME_CLASS_H
+#define FOLDR_SOME_CLASS_H
+
+...
+
+#endif//FOLDR_SOME_CLASS_H
+~~~~~~~~~~~~~~~
+Each header file must include a header guard as shown above. The defined macro is adopted from the path and name of the class and must follow the rules for macros (UPPER_CASE).
+Here the folder `src` is skipped, because all cheader and implementation files of CuraEngine are in `src`.
+
+Null pointer 
+----
+For C++, never use `NULL`, but use `nullptr` instead. NULL is an integer, not a pointer.
+
 Ordering
 ----
+ * There is yet no rule with respect to ordering private, protected and public class members.
+ * There is yet no rule with respect to the ordering of arguments of functions. (Exception: optional arguments should always be at the end of the argument list.)
+
+
+
+
+
+Illegal syntax
+----
 ~~~~~~~~~~~~~~~{.cpp}
-class Example
+void function()
 {
-    // start with input variable(s) and end with output parameter(s) 
-    void function1(ParamObject& input_variable, int setting_parameter, ParamObject2& return_parameter)
-    {
-        function2();
-        function3();
-    }
-    
-    // place functions called solely by one other function below it chronologically
-    void function2();
-    
-    void function3();
-};
+    if (condition)
+        single_line_outside_code_block(); // always use braces!
+}; // unneccesary semicolon after function definition is not allowed
 ~~~~~~~~~~~~~~~
+
+
+
+Code Guidelines
+====
+Below are a couple of guidelines which should generally be followed, unless there's good reason.
+
+White Space
+----
+ * Don't leave trailing spaces at the end of a line.
+ * Don't use tabs; use 4 spaces instead.
 
 Pointers vs. References
 -----
@@ -71,7 +116,7 @@ Use reference wherever you can, pointers wherever you must.
 Examples of where pointers can be used are:
 - optional values
 - variable values
-- class members not known at construction yet
+- class members not known at construction
 
 Documentation
 ----
@@ -83,53 +128,13 @@ Here's a small example:
  * Doxygen style comments!
  *
  * \param param1 explanation may refer to another \p param2
+ * \param param2 each parameter should be explained
+ * \return explanation of what is returned
  * /
-void function(int param1, int param2)
+int function(int param1, int param2)
 {
     // non-doxygen style comments on implementation details
 }
 
 int member; //!< inline doxygen comment on the entry to the left
-~~~~~~~~~~~~~~~
-
-Files
---------
-For a file Foo.h (UpperCamelCase):
-~~~~~~~~~~~~~~~{.cpp}
-#ifndef FOO_H
-#define FOO_H
-// [content]
-#endif//FOO_H
-~~~~~~~~~~~~~~~
-
-
-Other
-----
-~~~~~~~~~~~~~~~{.cpp}
-#include <all>
-#include <includes>
-#include <on>
-#include <top>
-
-#include <first_system_includes>
-
-#include <then_library_includes>
-
-#include "finally_local_includes"
-
-enum class EnumExample 
-{
-    ELEM0 = 0,
-    ELEM1 = 1
-};
-~~~~~~~~~~~~~~~
-
-Illegal syntax
-----
-~~~~~~~~~~~~~~~{.cpp}
-void function()
-{
-    if (condition)
-        single_line_outside_code_block(); // always use braces!
-}; // unneccesary semicolon after function definition is not allowed
 ~~~~~~~~~~~~~~~

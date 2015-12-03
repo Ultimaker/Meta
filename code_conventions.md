@@ -124,7 +124,7 @@ We use [Doxygen](www.doxygen.org/) to generate documentation. Try to keep your d
 
 Here's a small example:
 ~~~~~~~~~~~~~~~{.cpp}
-/ *!
+/*!
  * Doxygen style comments!
  *
  * \param param1 explanation may refer to another \p param2

@@ -109,6 +109,16 @@ White Space
  * Don't leave trailing spaces at the end of a line.
  * Don't use tabs; use 4 spaces instead.
 
+Implementation
+----
+Generally all implementation should be in .cpp files. An exception is template functions, which must be implemented in the header file.
+
+Sometimes including the implementation in the header file can make it easier for the compiler to inline functions.
+
+Class Files
+----
+It is generally preferred to have each class in its own file with a filename corrseponding to the calss name.
+
 Pointers vs. References
 -----
 Use reference wherever you can, pointers wherever you must.
@@ -122,9 +132,11 @@ Documentation
 ----
 We use [Doxygen](www.doxygen.org/) to generate documentation. Try to keep your documentation in doxygen style.
 
+Doxygen documentation should always be next to the declaration of the thing documented - in the header file.
+
 Here's a small example:
 ~~~~~~~~~~~~~~~{.cpp}
-/ *!
+/*!
  * Doxygen style comments!
  *
  * \param param1 explanation may refer to another \p param2

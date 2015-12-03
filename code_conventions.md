@@ -130,7 +130,7 @@ Here's a small example:
  * \param param1 explanation may refer to another \p param2
  * \param param2 each parameter should be explained
  * \return explanation of what is returned
- * /
+ */
 int function(int param1, int param2)
 {
     // non-doxygen style comments on implementation details

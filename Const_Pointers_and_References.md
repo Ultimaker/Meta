@@ -113,3 +113,15 @@ class Printer
 }
 ~~~~~~~~~~~~~~~
 Because of the mutable keyword, the const function is able to change the value of that variable. This example might be trivial, but consider some object where data might be loaded / unloaded (cached) on a requests notice.
+
+Dealbreaker
+-----
+The dealbreaker that might cause issues is that using const other (older) libraries or code might cause problems.
+A const function cannot call non-const functions, nor can const variables passed as non-const arguments.
+A non-const can allways be used as a const, but not vice versa.
+To this end, there is a special cast, the const_cast.
+This cast will either remove a const modifier (if it was a const) or add it (when it was not const).
+
+Advise
+=======
+There are no real drawbacks for not using const all the time. The more code that is implemented using consts, the less dealbreakers will be left. Using the const keyword makes the code intentions very clear and allows a compiler to enforce additional rules which makes programming errors less prone to happen.

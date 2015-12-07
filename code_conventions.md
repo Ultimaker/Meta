@@ -142,13 +142,8 @@ It is generally preferred to have each class in its own file with a filename cor
 
 Pointers vs. References
 -----
-(Under discusion)
-Use reference wherever you can, pointers wherever you must.
-
-Examples of where pointers can be used are:
-- optional values
-- variable values
-- class members not known at construction
+[Under discusion]
+See also Const_Pointers_and_References.md
 
 Documentation
 ----

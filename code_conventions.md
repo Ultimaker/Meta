@@ -81,6 +81,7 @@ for (int i = 0; i < len; i++)
  * After keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space.
  * In the `for` statement: place a space after the `;`, but not before.
  * When calling a function, place the opening bracket of the parameters right after the function name, without inserting a space.
+ * When calling the `[]` operator, don't insert a space before the `[`.
 
 Files
 --------

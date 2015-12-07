@@ -78,7 +78,7 @@ for (int i = 0; i < len; i++)
 ~~~~~~~~~~~~~~~
  * Binary operators (e.g. `+` `-` `*` `/` `=`) should always be enclosed by a space at both sides.
  * After a comma (`,`) there should be a space - not before.
- * After keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space.
+ * For keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space in between the keyword and the opening bracket.
  * In the `for` statement: place a space after the `;`, but not before.
  * When calling a function, place the opening bracket of the parameters right after the function name, without inserting a space.
  * When calling the `[]` operator, don't insert a space before the `[`.

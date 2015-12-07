@@ -54,6 +54,9 @@ def checkNames(logical_line, physical_line, tokens, indent_level):
                 idx += 1
                 if tokens[idx].string == "=":
                     while tokens[idx].string not in [",", ")"]:
+                        if tokens[idx].string == "[":
+                            while tokens[idx].string != "]":
+                                idx += 1
                         idx += 1
                 if tokens[idx].string == ")":
                     break

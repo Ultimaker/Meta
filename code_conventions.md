@@ -142,6 +142,7 @@ It is generally preferred to have each class in its own file with a filename cor
 
 Pointers vs. References
 -----
+(Under discusion)
 Use reference wherever you can, pointers wherever you must.
 
 Examples of where pointers can be used are:

@@ -63,6 +63,25 @@ enum class EnumExample
 EnumExample var = EnumExample::ELEM0; // call enum value via the scope of the enum class
 ~~~~~~~~~~~~~~~
 
+Spacing
+----
+Example:
+~~~~~~~~~~~~~~~{.cpp}
+for (int i = 0; i < len; i++)
+{
+    int j, k;
+    j = k = 1 + mathematicalOperation(i);
+    std::vector<int> l;
+    vector.resize(len);
+    vector[i] = j;
+}
+~~~~~~~~~~~~~~~
+ * Binary operators (e.g. `+` `-` `*` `/` `=`) should always be enclosed by a space at both sides.
+ * After a comma (`,`) there should be a space.
+ * After keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space.
+ * In the `for` statement: place a space after the `;`, but not before.
+ * When calling a function, place the opening bracket of the parameters right after the function name, without inserting a space.
+
 Files
 --------
 Example for a file CuraEngine/src/foldr/SomeClass.h (UpperCamelCase):

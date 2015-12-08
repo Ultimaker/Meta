@@ -76,7 +76,7 @@ for (int i = 0; i < len; i++)
     vector[i] = j;
 }
 ~~~~~~~~~~~~~~~
- * Binary operators (e.g. `+` `-` `*` `/` `=`) should always be enclosed by a space at both sides.
+ * Binary operators (e.g. `+` `-` `*` `/` `=`) should be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`.
  * After a comma (`,`) there should be a space - not before.
  * For keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space in between the keyword and the opening bracket.
  * In the `for` statement: place a space after the `;`, but not before.

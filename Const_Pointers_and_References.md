@@ -122,6 +122,60 @@ A non-const can allways be used as a const, but not vice versa.
 To this end, there is a special cast, the const_cast.
 This cast will either remove a const modifier (if it was a const) or add it (when it was not const).
 
-Advise
+Advise regarding constness
 =======
 There are no real drawbacks for not using const all the time. The more code that is implemented using consts, the less dealbreakers will be left. Using the const keyword makes the code intentions very clear and allows a compiler to enforce additional rules which makes programming errors less prone to happen.
+
+References
+=======
+
+Basically, references are equal to pointers, however with some very distintcive differences:
+* References are treated like a normal object, hence the . scope instead of the ->
+* Unlike pointers, references can only be initialized once
+* References must also be initialized on declaration (very RAII)
+* This also means a reference cannot be NULL
+* And, on top of that, a resource cannot created like a pointer nor deleted like one.
+
+These restrictions do give a number of advantages compare to pointers.
+Just as pointer, references must hold objects that are still in scope. But contrary to pointers, this is a situation that most of the time the compiler can detect and warn about.
+
+Also, using references make code more readable, especially when it comes to operator overloading.
+Consider this piece of code:
+~~~~~~~~~~~~~~~{.cpp}
+class Matrix
+{
+  public:
+  Matrix::Matrix(const Matrix &matrix_to_clone);
+  
+  const &Matrix operator::operator*(const Matrix &multiplier);
+}
+
+Matrix m1;
+Matrix m2;
+Matrix m3(m1 * m2);
+~~~~~~~~~~~~~~~
+versus
+~~~~~~~~~~~~~~~{.cpp}
+class Matrix
+{
+  public:
+  Matrix::Matrix(const Matrix *matrix_to_clone);
+  
+  const *Matrix operator::operator*(const Matrix *multiplier);
+}
+
+Matrix m1;
+Matrix m2;
+Matrix m3(m1->operator*(&m2));
+~~~~~~~~~~~~~~~
+Which one is more natural to read and understand?
+
+Studies have shown that a very large percentage of bugs in C++ are caused by memory leaks. Using references whenever possible will reduce those kinds of bugs.
+
+Nonetheless, there are a number of reasons to keep using pointers:
+* old libraries that expect pointers using NULL values
+* pointer arithmetic for low level accessing data
+
+Advise regarding references
+=======
+It's a good idea to use references where and whenever possible and only to use pointers when it's absolutely necessary.

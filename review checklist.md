@@ -2,7 +2,7 @@
 Since the term Definition of Done was not understood, here is a short and simple definition:
 > DoD is a checklist of valuable activities required to produce software. 
 
-So after the DoD is met, a story within Scrum is finished.
+So after the DoD is met, an issue within Scrum is finished.
 The review checklist is created to get a start using a partial DoD set of requirements and is a living document. 
 
 ### Version

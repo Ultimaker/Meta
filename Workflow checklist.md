@@ -31,7 +31,3 @@ This applies to the *In Progress* phase
 
 ### Component test
 
-### Finishing Up
-* Peer review is done (*Review* phase)
-* Acceptance testing is performed (*QA* phase)
-* Remaning time for tasks is set to 0h 0m

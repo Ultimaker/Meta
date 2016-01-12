@@ -26,6 +26,7 @@ This applies to the *In Progress* phase
 * Changes in build/deployment/configuration are both communicated and documented
 * Relevant diagrams are created / updated [future] (TODO: Find out what tool to use. For example: plantuml, graphviz, papyrus, obeo designer, etc)
 * Remaining time for review, integration and acceptance testing is set or updated 
+* Ensure that commits are linked to jira issue (Preferably in commit messages)
 
 ### Review
 TODO

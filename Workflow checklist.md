@@ -16,9 +16,9 @@ which deliverable are completed.
 
 ### In progress
 This applies to the *In Progress* phase
-* Code produced complete implementation of an issue (no more TODOs without jira issue reference, loose ends etc)
-* Code complies with Coding Guidelines & Coding Standards
-* Code is commented / documented according to the specified Doxygen Guidelines [work in progress]
+* Code produced complete implementation of the issue (no more TODOs without jira issue reference, loose ends etc)
+* Code complies with coding guidelines and standards
+* Code is documented according to the specified Doxygen Guidelines [work in progress]
 * Code builds / compiles without errors
 * Code runs without (obvious) errors
 * Unit tests are written and passing [work in progress]

@@ -27,10 +27,10 @@ This applies to the *In Progress* phase
 * Relevant diagrams are created / updated [future] (TODO: Find out what tool to use. For example: plantuml, graphviz, papyrus, obeo designer, etc)
 * Remaining time for review, integration and acceptance testing is set or updated 
 * Ensure that commits are linked to jira issue (Preferably in commit messages)
+* TODO: What does a good commit look like 
 
 ### Review
 TODO
 
 ### Component test
 TODO
-

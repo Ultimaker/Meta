@@ -6,7 +6,7 @@ So after the DoD is met, an issue within Scrum is finished.
 The workflow checklist is created to get a start using a partial DoD set of requirements and is a living document. 
 
 ### Version
-0.0.99
+0.0.100
 
 ### Purpose
 The purpose of this checklist is to improve the quality of deliverables (mostly code) and increase the speed in 

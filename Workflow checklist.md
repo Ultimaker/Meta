@@ -13,6 +13,7 @@ The purpose of this checklist is to improve the quality of deliverables (mostly 
 which deliverable are completed.
 
 ### New
+TODO
 
 ### In progress
 This applies to the *In Progress* phase
@@ -23,11 +24,12 @@ This applies to the *In Progress* phase
 * Code runs without (obvious) errors
 * Unit tests are written and passing [work in progress]
 * Changes in build/deployment/configuration are both communicated and documented
-* Relevant diagrams are created / updated [future]
-* Remaining time for review, integration and acceptance testing is set or updated
-* 
+* Relevant diagrams are created / updated [future] (TODO: Find out what tool to use. For example: plantuml, graphviz, papyrus, obeo designer, etc)
+* Remaining time for review, integration and acceptance testing is set or updated 
 
 ### Review
+TODO
 
 ### Component test
+TODO
 

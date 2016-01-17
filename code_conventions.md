@@ -1,28 +1,57 @@
-This document describes the code conventions and guidelines to be followed in Ultimaker C and C++ code.
-
-Note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
-
-
 Code Conventions
 =======
-Below all code conventions which must be followed in all newly committed code.
-The next section is on guidelines, which are allowed to be broken in certain cases.
+This document describes the code conventions and guidelines to be followed in all Ultimaker code, regardless the programming environment.
+In certain cases specific rules might apply depening on the programming languaged used, but in general all the conventions would apply all programming and/or scripting languages.
 
-Bracketing and indenting
+Do note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
+
+The Code Conventions are broken op in a few parts for better readability.
+
+Commenting
 -----
+There are 3 kinds of comments that can be used.
+* Commenting for documentation purposes (see Doxygen Commenting in different document)
+* Comments to make clear something needs to be examined and possibly be refactored (referring to a Jira issue/story)
+* Comments that are needed to explain a workaround to some unexpected behaviours
+
+Never should comments be put in place to explain what code is (going to be) doing! 
+If that's the case, rethink the strategy and solution.
+
+Indenting / trailing whitespaces
+-----
+* Never use TABs
+* Indenting is allways 4 spaces
+* No trailing whitespaces
+
+Make sure that all editors used enforce these settings
+
+Code blocks
+-----
+* Allways use a codeblock if possible and allowed in the language construction
+* Codeblocks allways start on a new line
+* The opening and closing codeblock delimiters should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
+* Any code within the a codeblock must be indented to one indentation level further. Indentation levels differ by 4 spaces.
+
+Some examples of the previous rules:
+
+Bad code
 ~~~~~~~~~~~~~~~{.cpp}
-if (condition) // brackets always on new lines
-{ // allways a bracket after an if, for, while, etc.
+if (condition)       
+{ cout << "Do nothing" << EOL; 
+} else cout << "Hahaha" << EOL;
+~~~~~~~~~~~~~~~
+Good code
+~~~~~~~~~~~~~~~{.cpp}
+if (condition)
+{ // New block, allways start block delimiter on new line
     // indent always with 4 spaces, never with tabs
-}
+    cout << "Do nothing" << EOL;
+} // Block end delimiter also on new line
 else // else on new line
-{
-    // more code
+{ // A code block is allways possible in this case, so use it
+    cout << "Hahaha" << EOL;
 }
 ~~~~~~~~~~~~~~~
-
-Brackets may never be omitted. The opening and closing bracket should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`). 
-Any code within the brackets must be indented to one indentation level further. Indentation levels differ by 4 spaces.
 
 Naming conventions
 ------
@@ -30,6 +59,8 @@ Naming conventions
  * functions: lowerCamelCase
  * classes: UpperCamelCase
  * macros: UPPER_CASE_WITH_UNDERSCORES
+
+Function names should start with a verb or a question (is, has) as this helps a lot with understanding what the implementation is about.
 
 Example:
 ~~~~~~~~~~~~~~~{.cpp}
@@ -48,9 +79,9 @@ public:
 };
 ~~~~~~~~~~~~~~~
 
-Enums
+Enums (C/C++)
 ----
-For C++, always use enum classes; never plain enums. Use UpperCamelCase for enum names and UPPER_CASE for the values.
+Always use enum classes; never plain enums. Use UpperCamelCase for enum names and UPPER_CASE for the values.
 
 Example:
 ~~~~~~~~~~~~~~~{.cpp}
@@ -76,60 +107,43 @@ for (int i = 0; i < len; i++)
     vector[i] = j;
 }
 ~~~~~~~~~~~~~~~
- * Binary operators (e.g. `+` `-` `*` `/` `=`) should be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`.
+ * Binary operators (e.g. `+` `-` `*` `/` `=` `+=` `-=` `/=` `*=`) should be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`.
  * After a comma (`,`) there should be a space - not before.
- * For keywords with brackets (e.g. `if`, `for`, `while`, `switch`) there should be a space in between the keyword and the opening bracket.
+ * For keywords with parentheses `(` and `)` (e.g. `if`, `for`, `while`, `switch`) there should be a space in between the keyword and the opening parenthesis.
  * In the `for` statement: place a space after the `;`, but not before.
- * When calling a function, place the opening bracket of the parameters right after the function name, without inserting a space.
- * When calling the `[]` operator, don't insert a space before the `[`.
+ * When calling a function, place the opening parenthesis `(` of the parameters right after the function name, without inserting a space.
+ * When calling the index `[]` operator, don't insert a space before the `[`.
 
-Files
+
+Header files (C/C++)
 --------
 Example for a file CuraEngine/src/foldr/SomeClass.h (UpperCamelCase):
 ~~~~~~~~~~~~~~~{.cpp}
-#ifndef FOLDR_SOME_CLASS_H
-#define FOLDR_SOME_CLASS_H
+#ifndef (PATH_SOME_CLASS_H)
+#define PATH_SOME_CLASS_H
 
 ...
 
-#endif//FOLDR_SOME_CLASS_H
+#endif //PATH_SOME_CLASS_H
 ~~~~~~~~~~~~~~~
 Each header file must include a header guard as shown above. The defined macro is adopted from the path and name of the class and must follow the rules for macros (UPPER_CASE).
 Here the folder `src` is skipped, because all header and implementation files of CuraEngine are in `src`.
 
-Null pointer 
+Null pointer (C++)
 ----
 For C++, never use `NULL`, but use `nullptr` instead. NULL is an integer, not a pointer.
 
 Ordering
 ----
- * There is yet no rule with respect to ordering private, protected and public class members.
- * There is yet no rule with respect to the ordering of arguments of functions. (Exception: optional arguments should always be at the end of the argument list.)
+[MARCO: New advise]
 
-
-
-
-
-Illegal syntax
-----
-Here's some example of what is ***not*** allowed in any newly committed code:
-~~~~~~~~~~~~~~~{.cpp}
-void function()
-{
-    if (condition)
-        single_line_outside_code_block(); // always use braces!
-}; // unneccesary semicolon after function definition is not allowed
-~~~~~~~~~~~~~~~
-
-White Space
-----
- * Don't leave trailing spaces at the end of a line.
- * Don't use tabs; use 4 spaces instead.
-
+* Members: Implement functions Top-Down, starting with constructors/deconstructors in case of classes. That way, a class implementation can be read as a page from a book: from top to bottom providing clarity. This can be an issue for declarative language constructs like C/C++ , but then it's good practice to use forward declarations.
+* Go from public, protected to private. Reasoning behind this is similar. When using a class, one is more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningfull to the maintainer of the class. This helps with the OOP paradigm of implementation hiding.
+* Optional arguments should always be at the end of the argument list.
 
 Code Guidelines
 ====
-Below are a couple of guidelines which should generally be followed, unless there's good reason.
+Below are a couple of guidelines which should generally be followed, unless there's good reason not to.
 
 Implementation
 ----

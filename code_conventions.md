@@ -33,14 +33,18 @@ If that's the case, rethink the strategy and solution.
 Logging *** New ***
 ----
 Logging should be done on a few levels: 
-* TRACE: The most verbose of logging -> very low level details like logging function calls being made
 * DEBUG: Verbose logging -> logging data that is useful to debug parts of the code being run
-* INFO: Logging -> logging information that can be seen as feedback to a user on his/her actions
+* INFO: Logging -> logging information that can be seen as feedback to a user on his/her actions (acties gebruiker en acties systeem)
 * WARN: Warning message are an indication to the user that something is not entirely right, but might not yet be a big issue
 * ERROR: An error is a situation that cannot be overcome without external influences
 
 When to log:
-[ TO BE DISCUSSED ]
++ error: functie fout
++ critical: app stop
+uranium logging
+python logging
+[easylogging++ (boost)]
+compile time log level?
 
 Indenting / trailing whitespaces
 -----
@@ -48,12 +52,16 @@ Indenting / trailing whitespaces
 * Indenting is allways 4 spaces
 * No trailing whitespaces
 
-Make sure that all editors used enforce these settings
+Make sure that all editors used enforce these settings for the lines edited  changed (untouched code stays the same)
 
-Localization *** NEW ****
+Localization *** NEW ***
 ----
 [ TO BE DISCUSSED ]
 I8N strings?
+embedded gelijk aan uranium
+context marker + vertaling
+named arguments
+
 
 Code blocks
 -----
@@ -88,9 +96,11 @@ Naming conventions
  * variables: lower_case_with_underscores
  * functions: lowerCamelCase
  * classes: UpperCamelCase
- * macros: UPPER_CASE_WITH_UNDERSCORES
+ * macros/constants: UPPER_CASE_WITH_UNDERSCORES
 
 Function names should start with a verb or a question (is, has) as this helps a lot with understanding what the implementation is about.
+
+QML uitzondering -> eigen stijl
 
 Example:
 ~~~~~~~~~~~~~~~{.cpp}
@@ -123,6 +133,9 @@ enum class EnumExample
 
 EnumExample var = EnumExample::ELEM0; // call enum value via the scope of the enum class
 ~~~~~~~~~~~~~~~
+
+enum moeten const regels volgen
+
 
 Spacing
 ----
@@ -169,7 +182,6 @@ Ordering
 
 * Members: Implement functions Top-Down, starting with constructors/deconstructors in case of classes. That way, a class implementation can be read as a page from a book: from top to bottom providing clarity. This can be an issue for declarative language constructs like C/C++ , but then it's good practice to use forward declarations.
 * Go from public, protected to private. Reasoning behind this is similar. When using a class, one is more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningfull to the maintainer of the class. This helps with the OOP paradigm of implementation hiding.
-* Optional arguments should always be at the end of the argument list.
 
 Strings
 ----
@@ -177,7 +189,7 @@ Strings are double quotes. While python and php allow single and double quoted s
 
 Lines and Linelength *** Changed / New ***
 ----
-* "Maximum line lenght" - There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 79 characters. This helps doing the code reviews!
+* "Maximum line length" - There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters. This helps doing the code reviews!
 * A single line contains only one statement
 
 Alignment *** New ***

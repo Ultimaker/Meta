@@ -43,6 +43,11 @@ Indenting / trailing whitespaces
 
 Make sure that all editors used enforce these settings
 
+Internationalization
+----
+[ TO BE DISCUSSED ]
+I8N strings?
+
 Code blocks
 -----
 * Allways use a codeblock if possible and allowed in the language construction
@@ -208,7 +213,8 @@ Functions *** New ***
 ----
 * Functions should return only 1 value (the return value)
 * If a function needs to return more, the returnvalue could be a dictionary/hashtable construction
-* Functions should not contain more then 10-15 lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
+* The number of arguments to a function (especially when it's a member of a class) should not exceed 5. 
+* Functions should not contain more then 7-10 lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
 
 Principles *** New ***
 ----
@@ -216,7 +222,7 @@ Adhere to the following coding principles
 * DRY instead of WET: Don't Repeat Yourself / (Write Everyting Twice, We Enjoy Typing)
 * KISS: Keep It Simple, Stupid
 * GRASP: General Responsibility Assignment Software Patterns
-* SOLID: Single responsibility, Open-closed, Liskov substitution, Interface segregation and Dependency inversion
+* SOLID: Single responsibility, Open-closed, Liskov substitution, Interface segregation and Dependency inversion (segregration of concern ^ 2)
 
 Documentation
 ====

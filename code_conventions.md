@@ -1,13 +1,19 @@
 Code Conventions
 =======
 This document describes the code conventions and guidelines to be followed in all Ultimaker code, regardless the programming environment.
+
 In certain cases specific rules might apply depening on the programming languaged used, but in general all the conventions would apply all programming and/or scripting languages.
 
 Do note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
 
-The Code Conventions are broken op in a few parts for better readability.
+*** New ***
+Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 )http://www.php-fig.org/psr/psr-2/) for PHP, ... for C/C++
+These should be followed unless overruled in this document.
 
-Commenting
+*** New ***
+When contributing to other OpenSource projects, those coding guidelines must be followed.
+
+Commenting *** New ***
 -----
 There are 3 kinds of comments that can be used.
 * Commenting for documentation purposes (see Doxygen Commenting in different document)
@@ -141,11 +147,24 @@ Ordering
 * Go from public, protected to private. Reasoning behind this is similar. When using a class, one is more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningfull to the maintainer of the class. This helps with the OOP paradigm of implementation hiding.
 * Optional arguments should always be at the end of the argument list.
 
+Strings
+----
+Strings are double quotes. While python and php allow single and double quoted strings, and PEP8 only says "pick a rule and stick to it". We decided to do double quotes to match C++.
+
+Lines and Linelength *** Changed / New ***
+----
+* "Maximum line lenght" - There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 79 characters. This helps doing the code reviews!
+* A single line contains only one statement
+
+Alignment
+----
+Align code for better readability. This can be done on assignment level, parameter passing on function
+
 Code Guidelines
 ====
 Below are a couple of guidelines which should generally be followed, unless there's good reason not to.
 
-Implementation
+Implementation (C/C++)
 ----
 Generally all implementation should be in .cpp files. An exception is template functions, which must be implemented in the header file.
 
@@ -154,14 +173,42 @@ Sometimes including the implementation in the header file can make it easier for
 Class Files
 ----
 It is generally preferred to have each class in its own file with a filename corrseponding to the class name.
+Hence a class named Printer would have a printer.h + printer.cpp for C/C++, a printer.py for Python and a printer.php for PHP
 
-Pointers vs. References
+Namespaces *** New ***
+----
+[ TO BE DISCUSSED ]
+
+Const vs Non-const (C/C++) *** New ***
+----
+The best practice is to use const when and wherever possible.
+In the long run this will make the code, libraries and runtime more stable and robust.
+In the short run this might cause some friction with (older) code that does not use this concept (yet).
+
+Pointers vs. References used as return values in argument list *** Changed/New ***
 -----
-[Under discusion]
-See also Const_Pointers_and_References.md
+[ TO BE DISCUSSED ]
+In the end this was not as much a discussion as to use pointer or references, but what to use when using arguments to return values.
+
+This has a bigger impact on documentation part of Doxygen: if arguments are allowed to be used to return values, then for all arguments everywhere, using doxygen commenting, [in] and [out] tags must be put in the comments describing the arguments.
+
+Functions *** New ***
+----
+* Functions should return only 1 value (the return value)
+* If a function needs to return more, the returnvalue could be a dictionary/hashtable construction
+* Functions should not contain more then 10-15 lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
+
+Principles *** New ***
+----
+Adhere to the following coding principles
+* DRY instead of WET: Don't Repeat Yourself / (Write Everyting Twice, We Enjoy Typing)
+* KISS: Keep It Simple, Stupid
+* GRASP: General Responsibility Assignment Software Patterns
+* SOLID: Single responsibility, Open-closed, Liskov substitution, Interface segregation and Dependency inversion
 
 Documentation
-----
+====
+[ TODO ]
 We use [Doxygen](www.doxygen.org/) to generate documentation. Try to keep your documentation in doxygen style.
 
 Doxygen documentation should always be next to the declaration of the thing documented - in the header file.

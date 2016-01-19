@@ -1,3 +1,8 @@
+TODO
+- QML
+- JavaScript
+- CSS
+
 Code Conventions
 =======
 This document describes the code conventions and guidelines to be followed in all Ultimaker code, regardless the programming environment.
@@ -5,6 +10,7 @@ This document describes the code conventions and guidelines to be followed in al
 In certain cases specific rules might apply depening on the programming languaged used, but in general all the conventions would apply all programming and/or scripting languages.
 
 Do note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
+
 
 *** New ***
 Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 (http://www.php-fig.org/psr/psr-2/) for PHP, ... for C/C++
@@ -21,7 +27,7 @@ There are 4 kinds of comments that can be used.
 * Comments that are needed to explain a workaround to some unexpected behaviours
 * In case of clariftying a choice made to implement something in a certain way, comments can be used to explain why
 
-Never should comments be put in place to explain what code is (going to be) doing! 
+Comments in general never should state the obvious. 
 If that's the case, rethink the strategy and solution.
 
 Logging *** New ***

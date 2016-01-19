@@ -15,10 +15,11 @@ When contributing to other OpenSource projects, those coding guidelines must be 
 
 Commenting *** New ***
 -----
-There are 3 kinds of comments that can be used.
+There are 4 kinds of comments that can be used.
 * Commenting for documentation purposes (see Doxygen Commenting in different document)
 * Comments to make clear something needs to be examined and possibly be refactored (referring to a Jira issue/story)
 * Comments that are needed to explain a workaround to some unexpected behaviours
+* In case of clariftying a choice made to implement something in a certain way, comments can be used to explain why
 
 Never should comments be put in place to explain what code is (going to be) doing! 
 If that's the case, rethink the strategy and solution.
@@ -43,7 +44,7 @@ Indenting / trailing whitespaces
 
 Make sure that all editors used enforce these settings
 
-Internationalization
+Localization *** NEW ****
 ----
 [ TO BE DISCUSSED ]
 I8N strings?
@@ -140,14 +141,14 @@ for (int i = 0; i < len; i++)
 
 Header files (C/C++)
 --------
-Example for a file CuraEngine/src/foldr/SomeClass.h (UpperCamelCase):
+Example for a file CuraEngine/src/folder/SomeClass.h (UpperCamelCase):
 ~~~~~~~~~~~~~~~{.cpp}
-#ifndef (PATH_SOME_CLASS_H)
-#define PATH_SOME_CLASS_H
+#ifndef (FOLDER_SOME_CLASS_H)
+#define FOLDER_SOME_CLASS_H
 
 ...
 
-#endif //PATH_SOME_CLASS_H
+#endif //FOLDER_SOME_CLASS_H
 ~~~~~~~~~~~~~~~
 Each header file must include a header guard as shown above. The defined macro is adopted from the path and name of the class and must follow the rules for macros (UPPER_CASE).
 Here the folder `src` is skipped, because all header and implementation files of CuraEngine are in `src`.
@@ -173,7 +174,7 @@ Lines and Linelength *** Changed / New ***
 * "Maximum line lenght" - There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 79 characters. This helps doing the code reviews!
 * A single line contains only one statement
 
-Alignment
+Alignment *** New ***
 ----
 Align code for better readability. This can be done on assignment level, parameter passing on function
 
@@ -183,13 +184,13 @@ Below are a couple of guidelines which should generally be followed, unless ther
 
 Implementation (C/C++)
 ----
-Generally all implementation should be in .cpp files. An exception is template functions, which must be implemented in the header file.
+All implementations should be in .cpp files. An exception is template functions, which must be implemented in the header file.
 
 Sometimes including the implementation in the header file can make it easier for the compiler to inline functions.
 
-Class Files
+Class Files *** Changed ***
 ----
-It is generally preferred to have each class in its own file with a filename corrseponding to the class name.
+Each class would have its own file with a filename corrseponding to the class name.
 Hence a class named Printer would have a printer.h + printer.cpp for C/C++, a printer.py for Python and a printer.php for PHP
 
 Namespaces *** New ***
@@ -214,7 +215,7 @@ Functions *** New ***
 * Functions should return only 1 value (the return value)
 * If a function needs to return more, the returnvalue could be a dictionary/hashtable construction
 * The number of arguments to a function (especially when it's a member of a class) should not exceed 5. 
-* Functions should not contain more then 7-10 lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
+* Functions should not contain more then 7-10 (?) lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
 
 Principles *** New ***
 ----

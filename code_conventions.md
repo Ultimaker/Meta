@@ -7,7 +7,7 @@ In certain cases specific rules might apply depening on the programming language
 Do note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
 
 *** New ***
-Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 )http://www.php-fig.org/psr/psr-2/) for PHP, ... for C/C++
+Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 (http://www.php-fig.org/psr/psr-2/) for PHP, ... for C/C++
 These should be followed unless overruled in this document.
 
 *** New ***
@@ -22,6 +22,18 @@ There are 3 kinds of comments that can be used.
 
 Never should comments be put in place to explain what code is (going to be) doing! 
 If that's the case, rethink the strategy and solution.
+
+Logging *** New ***
+----
+Logging should be done on a few levels: 
+* TRACE: The most verbose of logging -> very low level details like logging function calls being made
+* DEBUG: Verbose logging -> logging data that is useful to debug parts of the code being run
+* INFO: Logging -> logging information that can be seen as feedback to a user on his/her actions
+* WARN: Warning message are an indication to the user that something is not entirely right, but might not yet be a big issue
+* ERROR: An error is a situation that cannot be overcome without external influences
+
+When to log:
+[ TO BE DISCUSSED ]
 
 Indenting / trailing whitespaces
 -----

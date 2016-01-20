@@ -1,4 +1,5 @@
 TODO
+======
 - QML
 - JavaScript
 - CSS
@@ -12,14 +13,13 @@ In certain cases specific rules might apply depening on the programming language
 Do note that not all the code convention described here have been fully implemented yet. However, any newly committed code should follow the conventions below.
 
 
-*** New ***
-Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 (http://www.php-fig.org/psr/psr-2/) for PHP, ... for C/C++
+Also check with PEP8 (https://www.python.org/dev/peps/pep-0008/) for Python and and Psr-2 (http://www.php-fig.org/psr/psr-2/) for PHP, C++ Best Practices on GitBook  (https://www.gitbook.com/book/lefticus/cpp-best-practices/details) for examples and ideas and so on and so forth.
+
 These should be followed unless overruled in this document.
 
-*** New ***
 When contributing to other OpenSource projects, those coding guidelines must be followed.
 
-Commenting *** New ***
+Commenting
 -----
 There are 4 kinds of comments that can be used.
 * Commenting for documentation purposes (see Doxygen Commenting in different document)
@@ -27,20 +27,20 @@ There are 4 kinds of comments that can be used.
 * Comments that are needed to explain a workaround to some unexpected behaviours
 * In case of clariftying a choice made to implement something in a certain way, comments can be used to explain why
 
-Comments in general never should state the obvious. 
-If that's the case, rethink the strategy and solution.
+Comments in general never should state the obvious. If that's the case, rethink the strategy and solution.
 
-Logging *** New ***
+Logging
 ----
 Logging should be done on a few levels: 
 * DEBUG: Verbose logging -> logging data that is useful to debug parts of the code being run
 * INFO: Logging -> logging information that can be seen as feedback to a user on his/her actions (acties gebruiker en acties systeem)
 * WARN: Warning message are an indication to the user that something is not entirely right, but might not yet be a big issue
-* ERROR: An error is a situation that cannot be overcome without external influences
+* ERROR: When a function cannot continue at all, but it doesnt mean that the application has to stop working.
+* CRITICAL An error is a situation that cannot be overcome without external influence. This implies that the application is very likely to stop working at all
 
-When to log:
-+ error: functie fout
-+ critical: app stop
+With the above guidelines, try to use common sense in what log level to use. Especially with DEBUG and INFO the border is not very clear.
+
+*** New ***
 uranium logging
 python logging
 [easylogging++ (boost)]
@@ -52,18 +52,17 @@ Indenting / trailing whitespaces
 * Indenting is allways 4 spaces
 * No trailing whitespaces
 
-Make sure that all editors used enforce these settings for the lines edited  changed (untouched code stays the same)
+Make sure that all editors used enforce these settings for the lines edited  changed (untouched code stays the same, unless a complete refactoring is going to happen)
 
-Localization *** NEW ***
+Localization *** TODO: Tamara ***
 ----
-[ TO BE DISCUSSED ]
 I8N strings?
 embedded gelijk aan uranium
 context marker + vertaling
-named arguments
+use named arguments - this will help in the long run!
+examples
 
-
-Code blocks
+Codeblocks (not Code::Blocks :))
 -----
 * Allways use a codeblock if possible and allowed in the language construction
 * Codeblocks allways start on a new line
@@ -98,7 +97,7 @@ Naming conventions
  * classes: UpperCamelCase
  * macros/constants: UPPER_CASE_WITH_UNDERSCORES
 
-Function names should start with a verb or a question (is, has) as this helps a lot with understanding what the implementation is about.
+Function names should start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) as this helps a lot with understanding what the implementation is about.
 
 QML uitzondering -> eigen stijl
 
@@ -178,8 +177,6 @@ For C++, never use `NULL`, but use `nullptr` instead. NULL is an integer, not a 
 
 Ordering
 ----
-[MARCO: New advise]
-
 * Members: Implement functions Top-Down, starting with constructors/deconstructors in case of classes. That way, a class implementation can be read as a page from a book: from top to bottom providing clarity. This can be an issue for declarative language constructs like C/C++ , but then it's good practice to use forward declarations.
 * Go from public, protected to private. Reasoning behind this is similar. When using a class, one is more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningfull to the maintainer of the class. This helps with the OOP paradigm of implementation hiding.
 
@@ -194,11 +191,13 @@ Lines and Linelength *** Changed / New ***
 
 Alignment *** New ***
 ----
-Align code for better readability. This can be done on assignment level, parameter passing on function
+Align code for better readability.
+This can be done on assignment level, parameter passing on function, array definitions and so on. 
+
 
 Code Guidelines
 ====
-Below are a couple of guidelines which should generally be followed, unless there's good reason not to.
+Below are a couple of guidelines which should be followed, unless there's good reason not to.
 
 Implementation (C/C++)
 ----
@@ -217,7 +216,7 @@ Namespaces *** New ***
 
 Const vs Non-const (C/C++) *** New ***
 ----
-The best practice is to use const when and wherever possible.
+The best practice is to use const when and wherever possible. This is for both arguments declared in functions as well as the return values of the functions and the functions themselves (when they don't change the internal state of the object).
 In the long run this will make the code, libraries and runtime more stable and robust.
 In the short run this might cause some friction with (older) code that does not use this concept (yet).
 

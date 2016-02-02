@@ -10,6 +10,14 @@ and did it better. Because of this, that document is a required read.
 
 http://chris.beams.io/posts/git-commit/
 
+Linking Issues
+--------------
+As mentioned in the article, it is also possible to link issues to
+commit messages. In our case, we use Jira as an issue tracker. To
+link for example a Cura issue number 123, the string 'CURA-123' needs
+to be mentioned in the commit message. For an Embedded issue 42, EM-42
+needs to be added to the commit message.
+
 TODO (needs discussion)
 -----------------------
 Signed-off-by: Transfer ownership

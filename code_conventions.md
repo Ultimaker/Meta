@@ -184,12 +184,12 @@ Strings
 ----
 Strings are double quotes. While python and php allow single and double quoted strings, and PEP8 only says "pick a rule and stick to it". We decided to do double quotes to match C++.
 
-Lines and Linelength *** Changed / New ***
+Lines and Linelength
 ----
 * "Maximum line length" - There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters. This helps doing the code reviews!
 * A single line contains only one statement
 
-Alignment *** New ***
+Alignment
 ----
 Align code for better readability.
 This can be done on assignment level, parameter passing on function, array definitions and so on. 
@@ -205,46 +205,45 @@ All implementations should be in .cpp files. An exception is template functions,
 
 Sometimes including the implementation in the header file can make it easier for the compiler to inline functions.
 
-Class Files *** Changed ***
+Class Files
 ----
 Each class would have its own file with a filename corrseponding to the class name.
 Hence a class named Printer would have a printer.h + printer.cpp for C/C++, a printer.py for Python and a printer.php for PHP
 
-Namespaces *** New ***
+Namespaces
 ----
 [ TO BE DISCUSSED ]
 
-Const vs Non-const (C/C++) *** New ***
+Const vs Non-const (C/C++)
 ----
 The best practice is to use const when and wherever possible. This is for both arguments declared in functions as well as the return values of the functions and the functions themselves (when they don't change the internal state of the object).
 In the long run this will make the code, libraries and runtime more stable and robust.
 In the short run this might cause some friction with (older) code that does not use this concept (yet).
 
-Pointers vs. References used as return values in argument list *** Changed/New ***
+Pointers vs. References used as return values in argument list
 -----
 [ TO BE DISCUSSED ]
-In the end this was not as much a discussion as to use pointer or references, but what to use when using arguments to return values.
+If arguments are allowed to be used to return values, then for all arguments everywhere, using doxygen commenting, [in] and [out] tags must be put in the comments describing the arguments.
 
-This has a bigger impact on documentation part of Doxygen: if arguments are allowed to be used to return values, then for all arguments everywhere, using doxygen commenting, [in] and [out] tags must be put in the comments describing the arguments.
-
-Functions *** New ***
+Functions
 ----
-* Functions should return only 1 value (the return value)
-* If a function needs to return more, the returnvalue could be a dictionary/hashtable construction
+* If a function needs to return more than one value, the return value could be a dictionary/hashtable construction or a specially defined struct, or via output parameters.
 * The number of arguments to a function (especially when it's a member of a class) should not exceed 5. 
-* Functions should not contain more then 7-10 (?) lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
+* [ Under discussion ] Functions should not contain more then 7-10 (?) lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
 
-Principles *** New ***
+Principles
 ----
 Adhere to the following coding principles
 * DRY instead of WET: Don't Repeat Yourself / (Write Everyting Twice, We Enjoy Typing)
 * KISS: Keep It Simple, Stupid
 * GRASP: General Responsibility Assignment Software Patterns
 * SOLID: Single responsibility, Open-closed, Liskov substitution, Interface segregation and Dependency inversion (segregration of concern ^ 2)
+*** TODO: explain above power acronyms ***
 
 Documentation
 ====
 [ TODO ]
+
 We use [Doxygen](www.doxygen.org/) to generate documentation. Try to keep your documentation in doxygen style.
 
 Doxygen documentation should always be next to the declaration of the thing documented - in the header file.

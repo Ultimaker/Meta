@@ -54,7 +54,7 @@ Indenting / trailing whitespaces
 
 Make sure that all editors used enforce these settings for the lines edited  changed (untouched code stays the same, unless a complete refactoring is going to happen)
 
-Localization *** TODO: Tamara ***
+Localization *** TODO ***
 ----
 I8N strings?
 embedded gelijk aan uranium
@@ -62,12 +62,12 @@ context marker + vertaling
 use named arguments - this will help in the long run!
 examples
 
-Codeblocks (not Code::Blocks :))
+Code blocks (not Code::Blocks :))
 -----
-* Allways use a codeblock if possible and allowed in the language construction
-* Codeblocks allways start on a new line
-* The opening and closing codeblock delimiters should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
-* Any code within the a codeblock must be indented to one indentation level further. Indentation levels differ by 4 spaces.
+* Allways use a code block if possible and allowed in the language construction
+* Code blocks always start on a new line
+* The opening and closing code block delimiters should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
+* Any code within the a code block must be indented to one indentation level further. Indentation levels differ by 4 spaces.
 
 Some examples of the previous rules:
 

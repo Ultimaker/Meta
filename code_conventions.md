@@ -49,7 +49,7 @@ compile time log level?
 Indenting / trailing whitespaces
 -----
 * Never use TABs
-* Indenting is allways 4 spaces
+* Indenting is always 4 spaces
 * No trailing whitespaces
 
 Make sure that all editors used enforce these settings for the lines edited  changed (untouched code stays the same, unless a complete refactoring is going to happen)
@@ -64,7 +64,7 @@ examples
 
 Code blocks (not Code::Blocks :))
 -----
-* Allways use a code block if possible and allowed in the language construction
+* Always use a code block if possible and allowed in the language construction
 * Code blocks always start on a new line
 * The opening and closing code block delimiters should always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
 * Any code within the a code block must be indented to one indentation level further. Indentation levels differ by 4 spaces.
@@ -80,12 +80,12 @@ if (condition)
 Good code
 ~~~~~~~~~~~~~~~{.cpp}
 if (condition)
-{ // New block, allways start block delimiter on new line
+{ // New block, always start block delimiter on new line
     // indent always with 4 spaces, never with tabs
     cout << "Do nothing" << EOL;
 } // Block end delimiter also on new line
 else // else on new line
-{ // A code block is allways possible in this case, so use it
+{ // A code block is always possible in this case, so use it
     cout << "Hahaha" << EOL;
 }
 ~~~~~~~~~~~~~~~
@@ -99,7 +99,7 @@ Naming conventions
 
 Function names should start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) as this helps a lot with understanding what the implementation is about.
 
-QML uitzondering -> eigen stijl
+QML exception -> own style
 
 Example:
 ~~~~~~~~~~~~~~~{.cpp}
@@ -133,7 +133,7 @@ enum class EnumExample
 EnumExample var = EnumExample::ELEM0; // call enum value via the scope of the enum class
 ~~~~~~~~~~~~~~~
 
-enum moeten const regels volgen
+Enum must follow the const rules.
 
 
 Spacing
@@ -201,7 +201,7 @@ Below are a couple of guidelines which should be followed, unless there's good r
 
 Implementation (C/C++)
 ----
-All implementations should be in .cpp files. An exception is template functions, which must be implemented in the header file.
+All implementations should be in .cpp files. An exception are template functions, which must be implemented in the header file.
 
 Sometimes including the implementation in the header file can make it easier for the compiler to inline functions.
 

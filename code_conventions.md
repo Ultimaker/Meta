@@ -231,6 +231,13 @@ Functions
 * The number of arguments to a function (especially when it's a member of a class) should not exceed 5. 
 * [ Under discussion ] Functions should not contain more then 7-10 (?) lines of code. The pro is that functions have a more contained implementation leading to robust, testable, readable, less error-prone implementation. The con is that it will cause a bit more overhead (runtime calls) and documentation (for more functions)
 
+Access modifiers
+----
+Whenever possible use the most restrictive modifier (private) for functions, variables etc.
+This allow for easier implementation of OOP principles of encapsulation / information hiding.
+Create getters/setters if necessary.
+Switch to lesser restrictive modifiers (protected, public) only when there is a good reason to do so.
+
 Principles
 ----
 Adhere to the following coding principles

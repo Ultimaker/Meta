@@ -171,6 +171,20 @@ Example for a file CuraEngine/src/folder/SomeClass.h (UpperCamelCase):
 Each header file must include a header guard as shown above. The defined macro is adopted from the path and name of the class and must follow the rules for macros (UPPER_CASE).
 Here the folder `src` is skipped, because all header and implementation files of CuraEngine are in `src`.
 
+Pointers and References C(++)
+----
+When declaring a variable the asterisk (*) and the ampersand (&) should be connected to the type, and there should be a space between it and the variable name.
+~~~~~~~~~~~~~~~{.cpp}
+Object& instance; // allowed
+Object &instance; // not allowed
+~~~~~~~~~~~~~~~
+Multiple declarations are allowed, as long as the objects have the same type
+~~~~~~~~~~~~~~~{.cpp}
+Object instance, other; // allowed
+Object* instance, other; // not allowed, the other variable is of type Object, rather than Object*
+~~~~~~~~~~~~~~~
+
+
 Null pointer (C++)
 ----
 For C++, never use `NULL`, but use `nullptr` instead. NULL is an integer, not a pointer.

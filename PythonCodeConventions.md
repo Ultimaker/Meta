@@ -13,6 +13,8 @@ Our coding conventions follow this style guide, with the following exceptions:
   * Function names in PEP8 are in lower_case_with_underscores. At Ultimaker we decided to match our C++ coding convention and use mixedCase (CapitalizedWords by initial lowercase character).
   * Parameters, variables and members follow the lower_case_with_underscores convention. PEP8 has no recommendation on this.
 
-Checker script
+Checker script(s)
 =======
 For everyone convenience, a pep8_check_python.py script is provided here. Which can check python code against this style guide. It depends on the pep8 package from: https://pypi.python.org/pypi/pep8 
+
+Using mypy (http://mypy-lang.org/) and pylint (https://www.pylint.org/) are encouraged.

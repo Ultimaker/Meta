@@ -22,7 +22,7 @@ When contributing to other OpenSource projects, those coding guidelines must be 
 Commenting
 -----
 There are 4 kinds of comments that can be used.
-* Commenting foa doeumentation purposes (see Doxygen Commenting in different document)
+* Commenting for documentation purposes (see Doxygen Commenting in different document)
 * Comments to make clear something needs to be examined and possibly be refactored (referring to a Jira issue/story)
 * Comments that are needed to explain a workaround to some unexpected behaviours
 * In case of clariftying a choice made to implement something in a certain way, comments can be used to explain why

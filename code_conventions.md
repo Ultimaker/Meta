@@ -30,7 +30,7 @@ There are 4 kinds of comments that can be used.
 Comments in general never should state the obvious. If that's the case, rethink the strategy and solution.
 
 ###### JSON files
-With Embedded, a adjustment is made to the parser of the JSON files to allow for comments.
+With Embedded, an adjustment is made to the parser of the JSON files to allow for comments.
 This helps to describe what the parameters in the several JSON files mean and are used for.
 Comments in the JSON file should start with a double /
 Example:

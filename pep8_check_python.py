@@ -190,10 +190,15 @@ def main():
     result = pep8style.check_files()
     print("----------------------------------")
     result.print_statistics()
-    print("Total: %d" % (result.get_count()))
+    total = result.get_count()
+    print("Total: %d" % (total))
 
     if args.xml is not None:
         result.getJUnitXml().write(args.xml, "utf-8", True)
 
+    return total
+
 if __name__ == "__main__":
-    main()
+    total = main()
+
+    sys.exit(total)

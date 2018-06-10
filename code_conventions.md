@@ -213,7 +213,7 @@ y = fib(2.5)
 In this case, mypy will inform that the call using the floating point value is not valid:
 __mypytest.py:10: error: Argument 1 to "fib" has incompatible type "float"; expected "int"__
 
-This will help catching unwanted and unexpected bugs. This is not obligate but highly preferred and encouraged.
+This will help catch errors and unexpected bugs. This is not mandatory but strongly preferred and encouraged.
 
 Header files (C/C++)
 --------

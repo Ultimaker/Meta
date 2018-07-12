@@ -29,6 +29,30 @@ There are 4 kinds of comments that can be used.
 
 Comments in general never should state the obvious. If that's the case, rethink the strategy and solution.
 
+###### JSON files
+With Embedded, an adjustment is made to the parser of the JSON files to allow for comments.
+This helps to describe what the parameters in the several JSON files mean and are used for.
+Comments in the JSON file should start with a double /
+Example:
+~~~~~~~~~~~~~~~{.json}
+// Temperature compensation used in marlin for control and reporting according to the following formula...
+// compensated = (measured * factor) + offset
+"temperature_compensation_hotends": {
+    // No compensation
+    "0": {
+        "factor": 1.0,
+        "offset": 0.0
+    },
+    // At measured 210.0 degrees C there is a discrepancy of -2.4 degrees C
+    // Begin compensation starting at 50.0 degrees
+    // Gain is 2.4 / (210.0 - 50.0)
+    "1": {
+        "factor": 0.985, // = 1.0 - gain
+        "offset": 0.75   // = 50.0 * gain
+    }
+},
+~~~~~~~~~~~~~~~
+
 Logging
 ----
 Logging should be done on a few levels: 
@@ -157,6 +181,40 @@ for (int i = 0; i < len; i++)
  * When calling the index `[]` operator, don't insert a space before the `[`.
 
 
+Static Typing (Python)
+--------
+Normally, Python is using dynamic typing. For example:
+~~~~~~~~~~~~~~~{.py}
+def fib(n):
+    a, b = 0, 1
+    while a < n:
+        yield a
+        a, b = b, a + b
+
+x = fib(5)
+y = fib(2.5)
+~~~~~~~~~~~~~~~
+which defines the a dynamically typed function to return the Fibonacci number.
+This will be fine for x, but what will the result be for y?
+
+Adding more strict (static) typing can prevent these kinds of errors using tools like mypy (http://mypy-lang.org/):
+~~~~~~~~~~~~~~~{.py}
+from typing import Iterator
+
+def fib(n: int) -> Iterator[int]:
+    a, b = 0, 1
+    while a < n:
+        yield a
+        a, b = b, a + b
+
+x = fib(5)
+y = fib(2.5)
+~~~~~~~~~~~~~~~
+In this case, mypy will inform that the call using the floating point value is not valid:
+__mypytest.py:10: error: Argument 1 to "fib" has incompatible type "float"; expected "int"__
+
+This will help catch errors and unexpected bugs. This is not mandatory but strongly preferred and encouraged.
+
 Header files (C/C++)
 --------
 Example for a file CuraEngine/src/folder/SomeClass.h (UpperCamelCase):
@@ -256,17 +314,16 @@ Adhere to the following coding principles
 
 Documentation
 ====
-[ TODO ]
+[TODO]
 
 We use [Doxygen](http://www.doxygen.org/) to generate documentation. Try to keep your documentation in doxygen style.
 
 Doxygen documentation should always be next to the declaration of the thing documented - in the header file.
 
-Here's a small example:
+Here's a small example for C/C++
 ~~~~~~~~~~~~~~~{.cpp}
 /*!
- * Doxygen style comments!
- *
+ * @brief Description about function
  * @param param1 explanation may refer to another \p param2
  * @param param2 each parameter should be explained
  * @return explanation of what is returned
@@ -278,3 +335,22 @@ int function(int param1, int param2)
 
 int member; //!< inline doxygen comment on the entry to the left
 ~~~~~~~~~~~~~~~
+
+Another example for Python
+~~~~~~~~~~~~~~~{.py}
+## Description about function
+#  @param param1 explanation may refer to another \p param2
+#  @param param2 each parameter should be explained, except for cls/self (comparable to this for C/C++)
+#  @return explanation of what is being returned
+def function(param1, param2):
+    # Other comments
+    ## description for variable
+    some_var = 1
+
+    return some_var * 10
+~~~~~~~~~~~~~~~{.py}
+
+
+These are still only basic options for doxygen.
+
+Note: There is no colon between the argument name and the description. The first item which comes after @param should match the argument name.

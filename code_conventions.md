@@ -1,8 +1,6 @@
 TODO
 ======
 - QML
-- JavaScript
-- CSS
 
 Code Conventions
 =======

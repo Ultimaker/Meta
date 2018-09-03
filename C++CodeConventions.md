@@ -19,7 +19,8 @@ EnumExample var = EnumExample::FIRST_VALUE; // call enum value via the scope of 
 
 ```
 ## Null pointers
-* `NULL` MUST NOT be used for null pointers. `nullptr` MUST be used instead.
+* When using C++11, `NULL` MUST NOT be used for null pointers. `nullptr` MUST be used instead.
+* When using a compiler that does not support C++11, 0 MUST be used instead of `NULL`.
 
 ## Const vs Non-const
 Whenever possible, `const` SHOULD be used. This is for both arguments declared in functions, the return values, and for the functions themselves (provided they don't change the internal state of the object).

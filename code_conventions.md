@@ -42,8 +42,8 @@ In order to provide some control and filtering to this logging, we've defined th
 
 Indenting / trailing whitespaces
 -----
-* You MUST NOT use TABs for identation.
-* Indenting MUST be done with 4 spaces per identation level
+* You MUST NOT use TABs for indentation.
+* Indenting MUST be done with 4 spaces per indentation level
 * There MUST NOT be trailing whitespaces.
 
 Make sure that all editors used enforce these settings, but only for the lines edited to ensure that untouched code remains the same.
@@ -133,7 +133,7 @@ Functions SHOULD be implemented Top-Down, starting with constructors/deconstruct
 Go from public, protected to private. When using a class, one is usually more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningful to the maintainer of the class itself.
 
 ## Strings
-Strings MUST be defined by using double quotes. 
+Strings MUST be defined by using double quotes.
 
 ## Lines and length
 There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters.

@@ -56,7 +56,7 @@ Although there is no full guideline for localization, the following things have 
 
 Code blocks (not Code::Blocks :))
 -----
-* Codeblocks SHOULD be used if possible and allowed in the language construction
+* Codeblocks SHOULD be used if possible and allowed in the language construction in case of `if`, `while`, `else` and `switch`.
 * Code blocks MUST always start on a new line
 * The opening and closing code block delimiters MUST always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
 * Any code within a code block MUST be indented one indentation level deeper.

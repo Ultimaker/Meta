@@ -95,5 +95,6 @@ void Example::doSomethingWithBar(Bar bar)
 
 void Example::doSomethingWithFooPointer(Foo* foo_pointer)
 {
+    foo_pointer->doSomething();
 }
 ```

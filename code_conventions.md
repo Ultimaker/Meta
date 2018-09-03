@@ -133,7 +133,7 @@ Functions SHOULD be implemented Top-Down, starting with constructors/deconstruct
 Go from public, protected to private. When using a class, one is usually more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningful to the maintainer of the class itself.
 
 ## Strings
-Strings MUST be defined by using double quotes. While Python and PHP allow single and double quoted strings, we decided to do double quotes in order to match with C++.
+Strings MUST be defined by using double quotes. 
 
 ## Lines and length
 There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters.

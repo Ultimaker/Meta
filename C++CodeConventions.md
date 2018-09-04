@@ -4,7 +4,6 @@
 * Whenever enums are used, the enum classes SHOULD be used.
 * The naming of enum class MUST follow the UpperCamelCase naming convention, because it is a class.
 * The values of the enums MUST follow the UPPER_CASE naming convention.
-* Enum MUST follow the const rules.
 
 ### Examples
 #### Good example

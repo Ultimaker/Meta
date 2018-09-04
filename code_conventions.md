@@ -10,7 +10,7 @@ When contributing to other (external / open source) projects, the coding guideli
 ## Commenting
 There are 4 kinds of comments that can be used;
 * Comments for interface / signature documentation purposes (see Doxygen Commenting in different document)
-* Comments to indicate that something needs to be examined at a later stage and possibly be refactored. When this is done, it MUST be accompanied by a Jira issue / story
+* Comments to indicate that something needs to be examined at a later stage and possibly be refactored. When this is done, it MUST be accompanied by a Jira issue / story. This means that every TODO comment must have a "connected" jira issue / story.
 * Comments that explain a workaround. In these cases, the documentation must state why a work around is required instead of a "real" solution.
 * Comments to clarify implementation decisions (eg; Why is something done in a certain way)
 

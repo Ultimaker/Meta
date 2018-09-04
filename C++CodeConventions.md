@@ -26,7 +26,7 @@ EnumExample var = EnumExample::FIRST_VALUE; // call enum value via the scope of 
 Whenever possible, `const` SHOULD be used. This is for both arguments declared in functions, the return values, and for the functions themselves (provided they don't change the internal state of the object).
 
 ## Implementation
-The actual implementation SHOULD be in .cpp files. The only exception to this  are template functions, which MUST be implemented in the header file instead.
+The actual implementation SHOULD be in .cpp files. The only exceptions to this are template and inline functions, which MUST be implemented in the header file instead.
 
 ## Header guards
 * Each header file MUST include a header guard.

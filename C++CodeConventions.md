@@ -34,11 +34,11 @@ The actual implementation SHOULD be in .cpp files. The only exceptions to this a
 
 ### Examples
 #### Good Example
-Example for a file in /src/folder/SomeClass.h
+Example for a project called "My Project" with a file in /src/folder/SomeClass.h
 Note that the folder `src` is skipped, because all header and implementation files are in `src`.
 ``` cpp
-#ifndef FOLDER_SOME_CLASS_H
-#define FOLDER_SOME_CLASS_H
+#ifndef MYPROJECT_FOLDER_SOME_CLASS_H
+#define MYPROJECT_FOLDER_SOME_CLASS_H
 
 class SomeClass
 {

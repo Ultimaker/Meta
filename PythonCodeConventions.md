@@ -8,7 +8,7 @@ with the following adjustments, exceptions and specific choices:
 
 * Always use (4) spaces instead of tabs.
 * Strings use double quotes to match C++ style.
-* Maximum line length is set to 120 characters. See the 'line breaking' sectoin below for specific suggested PEP8 style choices.
+* Maximum line length is set to 120 characters. See the 'line breaking' section below for specific suggested PEP8 style choices.
 * String formatting, multiple elements:
 ``` python
 "{foo}_{bar}".format(foo="foo", bar="bar")
@@ -71,18 +71,19 @@ Indentation of function definitions and function calls that exceed the maximum l
 When a function definition exceeds the maximum line length, wrap the lines as such:
 ``` python
 def long_function_name(
-  var_one: str,
-  var_two: int,
-  var_three: float,
-  *,
-  var_four: bool=False
-  ) -> None:
-  print(var_one)
+    var_one: str,
+    var_two: int,
+    var_three: float,
+    *,
+    var_four: bool=False
+) -> None:
+    print(var_one)
 ```
 for a function call:
 ``` python
 foo = long_function_name(var_one, var_two,
-  var_three, var_four=True)
+    var_three, var_four=True
+)
 ```
 When using long named parameters, use a newline for each named parameter:
 ``` python

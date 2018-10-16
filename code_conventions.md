@@ -107,6 +107,14 @@ public:
 };
 ```
 
+### Solution for hotend versus nozzle and {}_index versus {}_nr or {}_number name usage:
+
+ * MUST use 'hotend' for the hot part at the end of the extruder train, never 'nozzle'.
+ * MUST only use 'nozzle' to refer to (attributes of) the Olsson block at the end of the hotend.
+ * Renaming COULD be done according to the Boy-scout Rule. But SHOULD only in the same(/smallest) scope as where changes are made.
+ * MUST only use '{}_index' indicating an index, counting value, referring to a position in an iterable. This will mostly be the case.
+ * MUST only use '{}_number' indicating a counting value, referring to a ordinal number (e.g. first, second, third) nearly always used for communication to a user.
+
 ## Spacing
 * Binary operators (e.g. `+` `-` `*` `/` `=` `+=` `-=` `/=` `*=`) MUST be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`.
 * After a comma (`,`) there MUST be a space, but not before.
@@ -190,6 +198,6 @@ def function(param1: int, param2: int) -> int:
     some_var = 1
 
     return some_var * 10
-``` python
+```
 
 Note: There is no colon between the argument name and the description. The first item which comes after @param should match the argument name.

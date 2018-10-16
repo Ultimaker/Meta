@@ -4,31 +4,30 @@ Python Code Conventions
 General
 ---
 Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/,
-with the following adjustments, exceptions and specific choices:
 
-* Always use (4) spaces instead of tabs.
-* Strings use double quotes to match C++ style.
-* Maximum line length is set to 120 characters. See the 'line breaking' section below for specific suggested PEP8 style choices.
-* String formatting, multiple elements:
+** Important: **
+Also check the code_conventions.md file for the generic rules, regardless of language.
+
+With the following adjustments, exceptions and specific choices:
+* See the 'line breaking' section below for specific suggested PEP8 style choices where function calls and definitions exceed the soft line length limit of 120 characters.
+* MUST apply the following string formatting:
+  * Multiple elements:
 ``` python
-"{foo}_{bar}".format(foo="foo", bar="bar")
+"{foo}_{bar}".format(foo = "foo", bar = "bar")
 ```
-* String formatting, single element:
+ * Single element:
 ``` python
 "{}_bar".format("foo")
 ```
-* Naming convention(s):
- * PEP8 specifies functions to be in lower_case_with_underscores. At Ultimaker we decided to match our C++ coding convention and use mixedCase (CapitalizedWords by initial lowercase character)
- * Parameters, variables and members follow the lower_case_with_underscores convention. PEP8 has no recommendation on this.
-* Avoid circular dependencies as much as possible. Remove when encountered according to boy-scout rules.
-* Check the code_conventions file for more (generic) rules.
+* SHOULD avoid circular dependencies as much as possible. Remove when encountered according to boy-scout rules.
+* Parameters, variables and members MUST follow the lower_case_with_underscores convention.
 
 Type checking
 ---
-As per Ultimaker RFC-1, we require that all new and changed code is typed by using mypy typing. See: http://mypy-lang.org/ for more information.
+As per Ultimaker RFC-1,all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
 
 ## Bad example
-Normally, Python is completely dynamicly typed;
+Normally, Python is completely dynamically typed;
 ``` python
 def fib(n):
     a, b = 0, 1
@@ -58,7 +57,7 @@ y = fib(2.5)
 In this case, mypy will inform that the call using the floating point value is not valid:
 __mypytest.py:10: error: Argument 1 to "fib" has incompatible type "float"; expected "int"__
 
-The following construct is _only_ allowed in case of circular dependencies, otherwise use regular import statements.
+The following construct is _only_ allowed in case of unavoidable circular dependencies, otherwise regular import statements MUST be used.
 ``` python
 MYPY = False
 if MYPY:
@@ -66,7 +65,7 @@ if MYPY:
 ```
 Line breaking
 ---
-Indentation of function definitions and function calls that exceed the maximum line length (PEP8: 80, Ultimaker: 120 characters) is described in PEP8 https://www.python.org/dev/peps/pep-0008/#indentation. From the suggested set, the following must be applied:
+Indentation of function definitions and function calls that exceed the soft line length (PEP8: 80, Ultimaker: 120 characters) is described in PEP8 https://www.python.org/dev/peps/pep-0008/#indentation. From the suggested set, the following SHOULD be applied:
 
 When a function definition exceeds the maximum line length, wrap the lines as such:
 ``` python
@@ -75,24 +74,24 @@ def long_function_name(
     var_two: int,
     var_three: float,
     *,
-    var_four: bool=False
+    var_four: bool = False
 ) -> None:
     print(var_one)
 ```
 for a function call:
 ``` python
 foo = long_function_name(var_one, var_two,
-    var_three, var_four=True
+    var_three, var_four = True
 )
 ```
-When using long named parameters, use a newline for each named parameter:
+When encountering a long function call with named parameters, a newline MUST be used for each named parameter:
 ``` python
 long_object_name.very_long_function_name(
-    this_is_the_first_variable=var_one,
-    this_is_the_second_variable=var_two
+    this_is_the_first_variable = var_one,
+    this_is_the_second_variable = var_two
 )
 ```
-Most important guide to take into account here is the additional indent for each parameter. This is used to separate the parameters from the logic in the function itself or following expressions in the case of a function call.
+Most important guide to take into account here is the additional indent for each parameter. This MUST be used to separate the parameters from the logic in the function itself or following expressions in the case of a function call.
 
 Quick references:
 * Maximum line length: https://www.python.org/dev/peps/pep-0008/#maximum-line-length]

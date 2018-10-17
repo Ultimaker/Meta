@@ -59,9 +59,11 @@ __mypytest.py:10: error: Argument 1 to "fib" has incompatible type "float"; expe
 
 The following construct is _only_ allowed in case of unavoidable circular dependencies, otherwise regular import statements MUST be used.
 ``` python
-MYPY = False
-if MYPY:
-    from [namespace] import [class]
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from [package] import [class]
 ```
 Line breaking
 ---

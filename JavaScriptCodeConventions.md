@@ -20,39 +20,34 @@ npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
 
 ```
 {
-  "extends": "airbnb",
-  "env": {
-    "node": true,
-    "es6": true,
-    "browser": true
-  },
-  "rules": {
-	  no-underscore-dangle: "allow"
-  }
+    "extends": "airbnb",
+    "env": {
+        "node": true,
+        "es6": true,
+        "browser": true
+    },
+    "rules": {
+        "indent": ["error", 2],
+	      "no-underscore-dangle": "allow"
+    }
 }
 ```
 
+## Additions to AirBnB
+### Comments
+Use JSDoc style comments.
 
-## Required Changes for Adoption
-### Simple to Change
-Some changes can easily be made with a single find & replace operation and a single commit.
-  
-#### Tabs
-- **Existing:** Use 4 spaces for tabs.
-- **AirBnB:** Use 2 spaces for tabs.
+### Typing
+TypeScript types/interfaces should use PascalCase.
 
-#### Strings
-- **Existing:** Use single-quotes.
-- **AirBnB:** Use double-quotes.
+## Exceptions to AirBnB
+### Tabs
+Although AirBnB prescribes 2 spaces for indentation, _all_ of Ultimaker software (R&D and Marketing) already use 4 spaces as a standard. For this reason an exception is added in `.eslintrc`.
 
-### Difficult to Change
-One change is very difficult to change and will need to be adapted over time. For this rule, an exception can be made until projects are converted to TypeScript, at which point the AirBnB style will be followed with an additional caveat.
+### Underscores
+One difficult change which will need to be adapted over time is the elimination of underscores. For this rule, an exception can be made until projects are converted to TypeScript, at which point the AirBnB style will be followed with an additional caveat.
 
-- **Existing:** Private properties/methods should start with an underscore (_).
+- **Existing:** Private properties/methods should start with an underscore (\_).
 - **AirBnB:** JavaScript does not have a concept of private, so do not make “fake private” properties/methods with an underscore.
 - **Future:** TypeScript _does_ have a concept of private, so the TypeScript prefix `private` should be used to denote private properties/methods instead of an underscore.
-
-## Additional Conventions
-- Use JSDoc style comments.
-- Typecscript types/interfaces should be PascalCase.
 

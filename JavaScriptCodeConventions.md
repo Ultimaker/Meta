@@ -28,7 +28,7 @@ npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
     },
     "rules": {
         "indent": ["error", 2],
-	      "no-underscore-dangle": "allow"
+        "no-underscore-dangle": "allow"
     }
 }
 ```

@@ -9,10 +9,10 @@ To reduce the need to build comprehensive style guidelines ourselves, we have de
 
 ## Enforcing AirBnB Style in Your Editor
 ### Set-Up for VS Code
-1. Install packages globally:
+1. Install packages:
 
 ```
-npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react typescript-eslint-parser
+npm i --save-dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react typescript-eslint-parser
 ```
 2. Install the [`eslint` plugin for VS Code](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 3. Create an `.eslintrc.json` file in your project’s root directory.

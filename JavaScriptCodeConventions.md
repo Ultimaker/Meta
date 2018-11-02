@@ -12,11 +12,11 @@ To reduce the need to build comprehensive style guidelines ourselves, we have de
 1. Install packages globally:
 
 ```
-npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react
+npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react typescript-eslint-parser
 ```
 2. Install the [`eslint` plugin for VS Code](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
-3. Create an `.eslintrc` file in your project’s root directory.
-4. Add the following content to `.eslintrc`:
+3. Create an `.eslintrc.json` file in your project’s root directory.
+4. Add the following content to `.eslintrc.json`:
 
 ```
 {
@@ -26,10 +26,27 @@ npm i -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
         "es6": true,
         "browser": true
     },
+    "parser": "typescript-eslint-parser",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "modules": true,
+            "jsx": true
+        }
+    },
     "rules": {
         "indent": ["error", 4],
         "no-underscore-dangle": "allow"
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.ts",
+                "**/*.tsx"
+            ]
+        }
+    ]
 }
 ```
 
@@ -42,7 +59,7 @@ TypeScript types/interfaces should use PascalCase.
 
 ## Exceptions to AirBnB
 ### Tabs
-Although AirBnB prescribes 2 spaces for indentation, _all_ of Ultimaker software (R&D and Marketing) already use 4 spaces as a standard. For this reason an exception is added in `.eslintrc`.
+Although AirBnB prescribes 2 spaces for indentation, _all_ of Ultimaker software (R&D and Marketing) already use 4 spaces as a standard. For this reason an exception is added in `.eslintrc.json`.
 
 ### Underscores
 One difficult change which will need to be adapted over time is the elimination of underscores. For this rule, an exception can be made until projects are converted to TypeScript, at which point the AirBnB style will be followed with an additional caveat.

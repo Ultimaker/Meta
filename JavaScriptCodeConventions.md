@@ -1,13 +1,79 @@
 # JavaScript Code Conventions
-> NOTE: These conventions also apply to super-sets of JavaScript which are used within Ultimaker such as TypeScript.
+> NOTE: These conventions also apply to super-sets of JavaScript which are used within Ultimaker such as TypeScript. As of November 2018, this document does not apply to QML/JS within QML.
+
+## Contents
+1. [Introduction](#introduction)
+2. [Structure](#structure)
+3. [Applying these Conventions in your Editor](#applying-these-conventions-in-your-editor)
 
 ## Introduction
 These JavaScript style guidelines are intended to be used by both the R&D and marketing team as part of a broader effort to standardize JavaScript style across the company and as an early facilitator for the fact that Ultimaker continues to offer more web-based products such as the Cura Cloud services and Cura Connect.
 
-## AirBnB as Baseline Style
-To reduce the need to build comprehensive style guidelines ourselves, we have decided to adopt the well-known and widely used **AirBnB style**. The full documentation for AirBnB style [can be found on GitHub](https://github.com/airbnb/javascript). For the most part, this style is already very similar to what is used by front-end teams at Ultimaker with a few differences, which are outlined below. It was also chosen because of it was designed for usage with React.js, which is used by the R&D department. It is applicable to Vue.js as well, however, and can be used by the marketing department.
+## Structure
+Per the convention for `Ultimaker/Meta`, rules within this document override Ultimaker Generic rules (`code_conventions.md`), which override the baseline standard (AirBnB). These can be considered a bottom, middle, and top layer of the standard.
 
-## Enforcing AirBnB Style in Your Editor
+### Bottom Layer: AirBnB
+As a foundation, Ultimaker uses the well-known and widely used **AirBnB style**. The full documentation for AirBnB style [can be found on GitHub](https://github.com/airbnb/javascript).
+
+> **Why?** For the most part, this style is already very similar to what is used by front-end teams at Ultimaker. It was also chosen because of it was designed for usage with React.js, which is used by the R&D department.
+
+### Middle Layer: UM Generic
+In certain places, the UM Generic style (`code_conventions.md`) overrides AirBnB style. These exceptions can be inferred by comparing the two documents, however for clarity they are as follows:
+
+- Use 4 spaces for indentation.
+
+	```
+	Example...
+	```
+	
+- Use 1-2 leading underscores to denote protected and private properties (respectively).
+
+	```
+	Example...
+	```
+
+### Top Layer: UM JavaScript
+In certain cases, the UM JavaScript style overrides the UM Generic style (`code_conventions.md`). These exceptions can be inferred by comparing the two documents however for clarity they are as follows:
+
+- Use camelCase for both variable names and method/function names.
+
+	> **Why?** In JavaScript, functions are variables, and camelCase is effectively industry-standard.
+	
+	```
+	Example...
+	```
+
+- Always put brackets on the same line .
+
+	> **Why?** Readability is improved and same-line is effectively industry-standard.
+	
+	```
+	Example...
+	```
+	
+- Use single quotes instead of double quotes.
+
+	> **Why?** In web contexts, when writing JS and HTML in the same file, it’s typical to use double quotes for HTML and single quotes for JS.
+	
+	```
+	Example...
+	```
+	
+Some additional rules which are not addressed on lower levels are as follows:
+
+- Documentation must use JSDoc style comments.
+
+	```
+	Example...
+	```
+
+- TypeScript types/interfaces should use PascalCase.
+
+	```
+	Example...
+	```
+
+## Applying these Conventions in your Editor
 ### Set-Up for VS Code
 1. Install packages:
 
@@ -63,22 +129,3 @@ npm i --save-dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-
     ]
 }
 ```
-
-## Additions to AirBnB
-### Comments
-Use JSDoc style comments.
-
-### Typing
-TypeScript types/interfaces should use PascalCase.
-
-## Exceptions to AirBnB
-### Tabs
-Although AirBnB prescribes 2 spaces for indentation, _all_ of Ultimaker software (R&D and Marketing) already use 4 spaces as a standard. For this reason an exception is added in `.eslintrc.json`.
-
-### Underscores
-One difficult change which will need to be adapted over time is the elimination of underscores. For this rule, an exception can be made until projects are converted to TypeScript, at which point the AirBnB style will be followed with an additional caveat.
-
-- **Existing:** Private properties/methods should start with an underscore (\_).
-- **AirBnB:** JavaScript does not have a concept of private, so do not make “fake private” properties/methods with an underscore.
-- **Future:** TypeScript _does_ have a concept of private, so the TypeScript prefix `private` should be used to denote private properties/methods instead of an underscore.
-

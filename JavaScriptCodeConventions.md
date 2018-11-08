@@ -78,7 +78,7 @@ In certain cases, the UM JavaScript style overrides the UM Generic style (`code_
     }
     ```
 
-- Always put brackets on the same line .
+- Always put brackets on the same line.
 
     > **Why?** In JavaScript, same-line is effectively industry-standard.
     

@@ -22,14 +22,36 @@ In certain places, the UM Generic style (`code_conventions.md`) overrides AirBnB
 
 - Use 4 spaces for indentation.
 
-	```
-	Example...
+	```ts
+	// Bad
+	class Foo {
+	  bar: true;
+	}
+
+	// Good
+	class Foo {
+	    bar: true;
+	}
 	```
 	
 - Use 1-2 leading underscores to denote protected and private properties (respectively).
 
-	```
-	Example...
+	```ts
+	class Foo {
+
+	    // Properties
+	    publicThing: 8;
+	    _protectedThing: "bar";
+
+	    // Methods
+	    refresh() {
+	        // Do some things...
+	        this._updateInterally();
+	    }
+	    _updateInterally() {
+	        // Do the update...
+	    }
+	}
 	```
 
 ### Top Layer: UM JavaScript
@@ -39,38 +61,88 @@ In certain cases, the UM JavaScript style overrides the UM Generic style (`code_
 
 	> **Why?** In JavaScript, functions are variables, and camelCase is effectively industry-standard.
 	
-	```
-	Example...
+	```js
+	class Fooinator {
+
+	    constructor() {
+	        this._fooBar = 0;
+	    }
+
+	    get fooBar() {
+	        return this._fooBar;
+	    }
+
+	    makeMoreFoo() {
+	        this._fooBar++;
+	    }
+	}
 	```
 
 - Always put brackets on the same line .
 
 	> **Why?** Readability is improved and same-line is effectively industry-standard.
 	
-	```
-	Example...
+	```js
+	// Bad
+	class Foo
+	{
+	    constructor()
+	    {
+	        if (this.bar)
+	        {
+	            // Do something...
+	        }
+	    }
+	}
+
+	// Good
+	class Foo {
+	    constructor() {
+	        if (this.bar) {
+	            // Do something...
+	        }
+	    }
+	}
 	```
 	
 - Use single quotes instead of double quotes.
 
 	> **Why?** In web contexts, when writing JS and HTML in the same file, it’s typical to use double quotes for HTML and single quotes for JS.
 	
-	```
-	Example...
+	```js
+	// Bad
+	const foo = "bar";
+
+	// Good
+	const foo = 'bar';
 	```
 	
 Some additional rules which are not addressed on lower levels are as follows:
 
 - Documentation must use JSDoc style comments.
 
-	```
-	Example...
+	```js
+	/**
+	 * Creates a book.
+	 * @param {string} title - The title of the book.
+	 * @param {string} author - The author of the book.
+	 */
+	function makeBook(title, author) {
+	    // Make the book...
+	}
 	```
 
 - TypeScript types/interfaces should use PascalCase.
 
-	```
-	Example...
+	```ts
+	interface FooComponentProps {
+		foo: number;
+		bar: boolean;
+	}
+
+	class FooComponent extends React.Component<FooComponentProps> {
+		// Make the component...
+	}
 	```
 
 ## Applying these Conventions in your Editor

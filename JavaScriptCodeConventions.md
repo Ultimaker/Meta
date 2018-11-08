@@ -7,7 +7,7 @@
 3. [Applying these Conventions in your Editor](#applying-these-conventions-in-your-editor)
 
 ## Introduction
-These JavaScript style guidelines are intended to be used by both the R&D and marketing team as part of a broader effort to standardize JavaScript style across the company and as an early facilitator for the fact that Ultimaker continues to offer more web-based products such as the Cura Cloud services and Cura Connect.
+These JavaScript style guidelines are intended to be used by both the R&D and marketing team as part of a broader effort to standardize JavaScript style across the company.
 
 ## Structure
 Per the convention for `Ultimaker/Meta`, rules within this document override Ultimaker Generic rules (`code_conventions.md`), which override the baseline standard (AirBnB). These can be considered a bottom, middle, and top layer of the standard.
@@ -80,7 +80,7 @@ In certain cases, the UM JavaScript style overrides the UM Generic style (`code_
 
 - Always put brackets on the same line .
 
-    > **Why?** Readability is improved and same-line is effectively industry-standard.
+    > **Why?** In JavaScript, same-line is effectively industry-standard.
     
     ```js
     // Bad
@@ -107,7 +107,7 @@ In certain cases, the UM JavaScript style overrides the UM Generic style (`code_
     
 - Use single quotes instead of double quotes.
 
-    > **Why?** In web contexts, when writing JS and HTML in the same file, it’s typical to use double quotes for HTML and single quotes for JS.
+    > **Why?** In web contexts, when writing JS and HTML in the same file, it’s typical to use double quotes for HTML and single quotes for JS. This helps to avoid problems when inserting js into html, or html into js.
     
     ```js
     // Bad

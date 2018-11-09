@@ -1,0 +1,171 @@
+# SPDX-License-Identifier: LGPL-3.0+
+#
+# Copyright (C) 2018 Ultimaker B.V.
+# Copyright (C) 2018 Raymond Siudak <r.siudak@ultimaker.com>
+#
+# GitLab CI package build is split up into two parts.
+# * Build environment: creates the docker image that is needed for package generation
+# * Package generation: creates the final artifact
+
+stages:
+  - lint
+  - prepare
+  - push
+  - build
+  - test
+  - cleanup
+
+# Common requisites
+# =================
+.parameters_common: &parameters_common
+  tags:
+    - docker
+
+.changes_docker: &changes_docker
+  changes:
+    - Dockerfile
+    - .dockerignore
+    - dockerfiles/**/*
+
+.shell_linting_common: &shell_linting_common
+  <<: *parameters_common
+  image: registry.hub.docker.com/koalaman/shellcheck-alpine:stable
+  stage: lint
+
+lint_shell_scripts:
+  <<: *shell_linting_common
+  script:
+    - shellcheck -C -f tty -s sh "build"*".sh"
+    - find 'scripts/' -iname '*.sh' -exec shellcheck -x -C -f tty -s sh {} \;
+
+# Build environment
+# The 'prepare' and the 'push' stages are executed conditionally. They both
+# include 'build_environment_common' that makes sure that the stage is only
+# performed when docker changes are performed on any branch.
+# =================
+.build_environment_common: &environment_common
+  <<: *parameters_common
+  image: registry.hub.docker.com/library/docker:stable
+
+prepare_build_environment:
+  <<: *environment_common
+  only:
+    <<: *changes_docker
+  stage: prepare
+  script:
+    - docker build --rm -t "${CI_COMMIT_SHA}:${CI_PIPELINE_ID}" .
+    - |
+        docker run \
+        --rm \
+        --privileged \
+        -e "ARM_EMU_BIN=${ARM_EMU_BIN}" \
+        -v "${ARM_EMU_BIN}:${ARM_EMU_BIN}:ro" \
+        "$CI_COMMIT_SHA:$CI_PIPELINE_ID" \
+        /test/buildenv_check.sh
+
+# The push to the Docker registry is thus only executed when docker changes are
+# performed and the working branch is 'master'
+push_build_environment:
+  <<: *environment_common
+  only:
+    <<: *changes_docker
+    refs:
+      - master
+  stage: push
+  script:
+    - docker login -u gitlab-ci-token -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
+    - docker tag  "${CI_COMMIT_SHA}:${CI_PIPELINE_ID}" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+    - docker tag  "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}" "${CI_REGISTRY_IMAGE}:latest"
+    - docker push "${CI_REGISTRY_IMAGE}:latest"
+
+cleanup_build_environment:
+  <<: *environment_common
+  only:
+    <<: *changes_docker
+  stage: cleanup
+  when: always
+  script:
+    - |
+      if docker inspect --type image "${CI_COMMIT_SHA}:${CI_PIPELINE_ID}" 1> /dev/null; then
+        docker rmi "${CI_COMMIT_SHA}:${CI_PIPELINE_ID}"
+      fi
+
+# Package generation
+# The actual artifact build should always be done with the latest Docker
+# registry image, unless the build environment is modified. GitLab CI syntax
+# is limited and therefore multiple build package jobs are defined in order to
+# catch all the scenarios and avoid multiple build job execution.
+# ==================
+.build_pkg_common: &build_pkg_common
+  <<: *parameters_common
+  stage: build
+  script:
+  - ./build.sh
+  artifacts:
+    name: "$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA"
+    paths:
+    - ./*.deb
+    expire_in: 3 days
+
+.dev_docker_candidate: &dev_docker_candidate
+  except:
+    refs:
+      - master
+  only:
+    <<: *changes_docker
+  image: "${CI_COMMIT_SHA}:${CI_PIPELINE_ID}"
+
+.dev_docker_latest: &dev_docker_latest
+  except:
+    <<: *changes_docker
+    refs:
+      - master
+  image: "${CI_REGISTRY_IMAGE}:latest"
+
+.master_docker_latest: &master_docker_latest
+  only:
+    refs:
+      - master
+  image: "${CI_REGISTRY_IMAGE}:latest"
+
+# Build the package on a non-master branch in a modified Docker image.
+build:dev_docker_candidate:
+  <<: *build_pkg_common
+  <<: *dev_docker_candidate
+
+# Build the package on a non-master branch in the latest Docker image.
+build:dev_docker_latest:
+  <<: *build_pkg_common
+  <<: *dev_docker_latest
+
+# Build the package on the master branch in the latest Docker image.
+build:master_docker_latest:
+  <<: *build_pkg_common
+  <<: *master_docker_latest
+
+# Test package
+.test_pkg_common: &test_pkg_common
+  <<: *parameters_common
+  stage: test
+  dependencies:
+    - build:dev_docker_candidate
+    - build:dev_docker_latest
+    - build:master_docker_latest
+  script:
+    - ./run_tests.sh
+
+# Test the package on a non-master branch in a modified Docker image.
+test:dev_docker_candidate:
+ <<: *test_pkg_common
+ <<: *dev_docker_candidate
+
+# Test the package on a non-master branch in the latest Docker image.
+test:dev_docker_latest:
+ <<: *test_pkg_common
+ <<: *dev_docker_latest
+
+# Test the package on a the master branch in the latest Docker image.
+test:master_docker_latest:
+ <<: *test_pkg_common
+ <<: *master_docker_latest

@@ -24,7 +24,7 @@ With the following adjustments, exceptions and specific choices:
 
 Type checking
 ---
-As per Ultimaker RFC-1,all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
+As per Ultimaker RFC-1, all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
 
 ## Bad example
 Normally, Python is completely dynamically typed;

@@ -1,8 +1,5 @@
-Python Code Conventions
-=======
-
-General
----
+# Python Code Conventions
+## General
 Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/,
 
 ** Important: **
@@ -22,11 +19,10 @@ With the following adjustments, exceptions and specific choices:
 * SHOULD avoid circular dependencies as much as possible. Remove when encountered according to boy-scout rules.
 * Parameters, variables and members MUST follow the lower_case_with_underscores convention.
 
-Type checking
----
+## Type checking
 As per Ultimaker RFC-1,all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
 
-## Bad example
+### Bad example
 Normally, Python is completely dynamically typed;
 ``` python
 def fib(n):
@@ -40,7 +36,7 @@ y = fib(2.5)
 ```
 Which defines the a dynamically typed function to return the Fibonacci number.
 This will be fine for x, but what will the result be for y?
-## Good example
+### Good example
 Adding more strict (static) typing can prevent these kinds of errors:
 ``` python
 from typing import Iterator
@@ -65,8 +61,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from [package] import [class]
 ```
-Line breaking
----
+## Line breaking
 Indentation of function definitions and function calls that exceed the soft line length (PEP8: 80, Ultimaker: 120 characters) is described in PEP8 https://www.python.org/dev/peps/pep-0008/#indentation. From the suggested set, the following SHOULD be applied:
 
 When a function definition exceeds the maximum line length, wrap the lines as such:
@@ -99,8 +94,8 @@ Quick references:
 * Maximum line length: https://www.python.org/dev/peps/pep-0008/#maximum-line-length]
 * Should a Line Break Before or After a Binary Operator: [https://www.python.org/dev/peps/pep-0008/#should-a-line-break-before-or-after-a-binary-operator]
 
-Checker script(s)
-=======
+# Checker script(s)
+
 For everyones convenience, a pep8_check_python.py script is provided here. This script can check python code against this style guide. It depends on the pep8 package from: https://pypi.python.org/pypi/pep8
 
 The usage of mypy (http://mypy-lang.org/) and pylint (https://www.pylint.org/) is strongly encouraged.

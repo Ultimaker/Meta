@@ -1,6 +1,6 @@
 # Python Code Conventions
 ## General
-Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/,
+Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/
 
 ** Important: **
 Also check the code_conventions.md file for the generic rules, regardless of language.
@@ -20,7 +20,7 @@ With the following adjustments, exceptions and specific choices:
 * Parameters, variables and members MUST follow the lower_case_with_underscores convention.
 
 ## Type checking
-As per Ultimaker RFC-1,all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
+As per Ultimaker RFC-1, all new and changed code MUST be typed by using mypy typing. See: http://mypy-lang.org/ for more information.
 
 ### Bad example
 Normally, Python is completely dynamically typed;

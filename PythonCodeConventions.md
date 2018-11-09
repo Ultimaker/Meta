@@ -3,7 +3,7 @@ Python Code Conventions
 
 General
 ---
-Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/,
+Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/
 
 ** Important: **
 Also check the code_conventions.md file for the generic rules, regardless of language.

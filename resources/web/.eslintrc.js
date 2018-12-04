@@ -19,7 +19,8 @@ module.exports = {
         "no-underscore-dangle": 0,
         "import/no-unresolved": 0,
         "jsx-closing-tag-location": 0,
-        "react/jsx-indent": ["error", 4]
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4]
     },
     settings: {
         "import/extensions": [".js", ".jsx"]

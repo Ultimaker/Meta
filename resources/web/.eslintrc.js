@@ -35,6 +35,8 @@ module.exports = {
 
                 // Required for interfaces
                 "no-undef": 0,
+                "no-unused-vars": 0,
+                "react/prop-types": 0,
 
                 // Use .tsx instead of .jsx
                 "react/jsx-filename-extension": [1, {

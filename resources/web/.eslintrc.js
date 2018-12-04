@@ -15,29 +15,11 @@ module.exports = {
     },
     plugins: ["import"],
     rules: {
-        "indent": ["error", 4, {
-
-            // These overrides are required to keep React code looking good
-            // They don't affect non-React code
-            "ignoredNodes": [
-                "JSXElement",
-                "JSXElement > *",
-                "JSXAttribute",
-                "JSXIdentifier",
-                "JSXNamespacedName",
-                "JSXMemberExpression",
-                "JSXSpreadAttribute",
-                "JSXExpressionContainer",
-                "JSXOpeningElement",
-                "JSXClosingElement",
-                "JSXText",
-                "JSXEmptyExpression",
-                "JSXSpreadChild"
-            ]
-        }],
+        "indent": ["error", 4],
         "no-underscore-dangle": 0,
         "import/no-unresolved": 0,
-        "jsx-closing-tag-location": 0
+        "jsx-closing-tag-location": 0,
+        "react/jsx-indent": ["error", 4]
     },
     settings: {
         "import/extensions": [".js", ".jsx"]

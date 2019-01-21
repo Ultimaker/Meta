@@ -10,7 +10,7 @@ With the following adjustments, exceptions and specific choices:
 * MUST apply the following string formatting:
   * Multiple elements:
 ``` python
-"{foo}_{bar}".format(foo = "foo", bar = "bar")
+"{foo}_{bar}".format(foo="foo", bar="bar")
 ```
  * Single element:
 ``` python
@@ -71,21 +71,21 @@ def long_function_name(
     var_two: int,
     var_three: float,
     *,
-    var_four: bool = False
+    var_four: bool=False
 ) -> None:
     print(var_one)
 ```
 for a function call:
 ``` python
 foo = long_function_name(var_one, var_two,
-    var_three, var_four = True
+    var_three, var_four= True
 )
 ```
 When encountering a long function call with named parameters, a newline MUST be used for each named parameter:
 ``` python
 long_object_name.very_long_function_name(
-    this_is_the_first_variable = var_one,
-    this_is_the_second_variable = var_two
+    this_is_the_first_variable=var_one,
+    this_is_the_second_variable=var_two
 )
 ```
 Most important guide to take into account here is the additional indent for each parameter. This MUST be used to separate the parameters from the logic in the function itself or following expressions in the case of a function call.

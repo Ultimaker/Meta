@@ -15,3 +15,7 @@ indent_style = tab
 [*.md]
 # 2 trailing spaces in Markdown are a newline
 trim_trailing_whitespace = false
+
+[*.y{,a}ml]
+indent_size = 2
+

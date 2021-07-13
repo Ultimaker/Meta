@@ -131,7 +131,7 @@ private:
     MemberVariableObject with_underscores;
 
 public:
-    void namespace_function_underscores(ParamObject& also_with_underscores)
+    void namespace_functionCapitalized(ParamObject& also_with_underscores)
     {
         LocalObject under_scores;
     }

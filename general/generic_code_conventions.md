@@ -103,15 +103,22 @@ switch (variable) {
 
 
 ## Naming conventions
+The following conventions are used for C/C++ naming. 
  * **variables**: `lower_case_with_underscores`
- * **functions**: `lower_case_with_underscores`
-   * Globally available functions: start with a verb to replace namespace
-   * C: start with capitalized name scope
-   * C++: start with namespaces `planner_set_max_pos`
- * **classes**: `PascalCase`
+ * **functions**: `lowerCamelCase`
+   > Note that we preceed the function name with a name scope or namespace. If required, that may be capitalized.
+   This means that `planner_setMaxJerk()` is correct and `ADC128d818_readLimit()` is also correct.
+ * **classes**: `UpperCamelCase`, or `PascalCase`
  * **macros/constants**: `UPPER_CASE_WITH_UNDERSCORES`
 
 When possible, function names can start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) in order to help with understanding what the implementation is about.
+
+> ! Note that at Ultimaker we follow the [Pep8](https://www.python.org/dev/peps/pep-0008/) coding standard. 
+> This means we follow those naming conventions for Python.
+> * **variables**: `lower_case_with_underscores`
+> * **functions**: `lower_case_with_underscores` (different from our C/C++ standard)
+> * **classes**: `CapWords`, which is the same as `PascalCase`
+> * **macros/constants**: `UPPER_CASE_WITH_UNDERSCORES`
 
 ### Examples
 #### Good code

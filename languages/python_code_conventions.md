@@ -3,7 +3,7 @@
 Ultimaker adheres to the PEP8 coding guidelines as described here: https://www.python.org/dev/peps/pep-0008/
 
 **Important:**
-Also check the code_conventions.md file for the generic rules, regardless of language.
+Also check the generic_code_conventions.md file for the generic rules, regardless of language.
 
 With the following adjustments, exceptions and specific choices:
 * See the 'line breaking' section below for specific suggested PEP8 style choices where function calls and definitions exceed the soft line length limit of 120 characters.

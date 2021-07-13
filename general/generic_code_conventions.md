@@ -56,19 +56,22 @@ Although there is no full guideline for localization, the following things have 
 
 Code blocks (not Code::Blocks :))
 -----
-* Codeblocks SHOULD be used if possible and allowed in the language construction in case of `if`, `while`, `else` and `switch`.
-* Code blocks MUST always start on a new line
-* The opening and closing code block delimiters MUST always be on a separate line on the same indentation level as the keywords (e.g. `if`, `while`, `else`).
-* Any code within a code block MUST be indented one indentation level deeper.
+* Codeblocks should be used if possible and allowed in the language construction in case of `if`, `while`, `else` and `switch`.
+* Codeblocks should also be used in the declarations of `classes` and `struct`'s.
+* Opening braces should be on the same line as the keywords (e.g. `if`, `while`, `else`) with a single space between the keyword and the brace.
+* Closing braces should be on the same indentation level as the keyword and on a new line after the code block.
+* In the case of adding additional conditions such as using `else`, the second conditional check will be placed after the closing bracket of the first condition block, with a space in between.
+* Any code within a code block must be indented one indentation level deeper.
+
+The reasoning behind this setup is to save vertical space on the screen, whilst still upholding clear indentations and brackets that decrease the possibility of the existence of incomplete code blocks.
 
 ### Examples
-#### Bad code
+#### Wrong code examples
 ``` cpp
 if (condition)       
 { cout << "Do nothing" << EOL;
 } else cout << "Hahaha" << EOL;
 ```
-#### Good code
 ``` cpp
 if (condition)
 { // New block, always start block delimiter on new line
@@ -80,14 +83,35 @@ else // else on new line
     cout << "Hahaha" << EOL;
 }
 ```
+#### Good code examples
+``` cpp
+if (condition) { // start block delimiter on the same line, add a single space
+    cout << "Do nothing" << EOL; // indent always with 4 spaces, never with tabs
+} else { // Closing brace should be on a new line, add spaces before and after the second conditional statement
+    cout << "Hahaha" << EOL;
+}
+
+switch (variable) {
+    case 1:
+        do_this();
+        break;
+    case 2:
+        do_that();
+        break;
+}
+```
+
 
 ## Naming conventions
- * **variables**: lower_case_with_underscores
- * **functions**: lowerCamelCase
- * **classes**: UpperCamelCase
- * **macros/constants**: UPPER_CASE_WITH_UNDERSCORES
+ * **variables**: `lower_case_with_underscores`
+ * **functions**: `lower_case_with_underscores`
+   * Globally available functions: start with a verb to replace namespace
+   * C: start with capitalized name scope
+   * C++: start with namespaces `planner_set_max_pos`
+ * **classes**: `PascalCase`
+ * **macros/constants**: `UPPER_CASE_WITH_UNDERSCORES`
 
-Function names SHOULD start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) in order to help with understanding what the implementation is about.
+When possible, function names can start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) in order to help with understanding what the implementation is about.
 
 ### Examples
 #### Good code
@@ -100,7 +124,7 @@ private:
     MemberVariableObject with_underscores;
 
 public:
-    void lowerCamelCaseFunction(ParamObject& also_with_underscores)
+    void namespace_function_underscores(ParamObject& also_with_underscores)
     {
         LocalObject under_scores;
     }
@@ -121,17 +145,31 @@ public:
 * In the `for` statement, a space MUST be after the `;`, but not before.
 * When calling a function, the opening parenthesis `(` of the parameters MUST be placed directly after the function name, without inserting a space.
 * When calling the index `[]` operator, don't insert a space before the `[`.
+* If multiple parentheses groups tend to be unreadable, add spaces.
+* Add 2 white lines between functions or 1 when the function has comments or documentation above its declaration.
 
 ### Examples
 #### Good code
 ``` cpp
-for (int i = 0; i < len; i++)
-{
-    int j, k;
-    j = k = 1 + mathematicalOperation(i);
-    std::vector<int> l;
-    vector.resize(len);
-    vector[i] = j;
+void examples_this_function(void) {
+    for (int i = 0; i < len; i++)
+    {
+        int j, k;
+        j = k = 1 + mathematicalOperation(i);
+        std::vector<int> l;
+        vector.resize(len);
+        vector[i] = j;
+        if ( (j == (k - 10)) && (k > 100) ) {   // you can add spaces between brackets to improve readability
+            // do this
+        }
+    }
+}
+
+/**
+ * @brief This function is commented, so a single white line is added in between
+ */
+void examples_that_function(void) {
+    // some code
 }
 ```
 
@@ -145,6 +183,7 @@ Strings MUST be defined by using double quotes.
 
 ## Lines and length
 There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters.
+It is recommended to not let your IDE wrap lines. This allows for easier version control amongst peers. 
 
 A single line SHOULD only contain one statement.
 
@@ -160,7 +199,7 @@ Every class SHOULD be in it's own file, unless it's a private class.
 
 ## Functions
 * If a function needs to return more than one value, the return value could be a dictionary/hashtable construction or a specially defined struct.
-* Output parameters SHOULD NOT be used.
+* Output parameters SHOULD NOT be used in C++.
 * The number of arguments to a function, especially when it's a member of a class, should not exceed 5.
 
 ## Documentation
@@ -168,7 +207,10 @@ Every class SHOULD be in it's own file, unless it's a private class.
 
 We use [Doxygen](http://www.doxygen.org/) to generate documentation.
 
-Doxygen documentation should always be next to the declaration of the thing documented.
+Doxygen documentation should always be above the declaration of the thing documented.
+EpyText doxygen comments should used when working in Python.
+
+If a source file needs explanation in it's usage, it should be added in the headers.
 
 ### Examples
 #### Good examples
@@ -188,16 +230,19 @@ int member; //!< inline doxygen comment on the entry to the left
 ```
 
 ``` python
-## Description about function
-#  @param param1 explanation may refer to another \p param2
-#  @param param2 each parameter should be explained, except for cls/self (this is comparable to 'this' for C/C++)
-#  @return explanation of what is being returned
 def function(param1: int, param2: int) -> int:
-    # Other comments
-    ## description for variable
+    """
+    Description about function
+    
+    @param param1:  explanation may refer to another \p param2
+    @param param2:  each parameter should be explained, except for cls/self (this is comparable to 'this' for C/C++)
+    
+    @rtype:         type of what is returned
+    @return         explanation of what is being returned
+    """
     some_var = 1
 
     return some_var * 10
 ```
 
-Note: There is no colon between the argument name and the description. The first item which comes after @param should match the argument name.
+>! Note: There is no colon between the argument name and the description. The first item which comes after @param should match the argument name.

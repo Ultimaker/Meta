@@ -1,8 +1,9 @@
+# C/C++ const pointers and references
 This document describes the principles behind using the const modifier for C and more so C++ when it comes to (class) functions, values to pass or return when using functions.
 
 Setters
 =======
-Consider the following simplefied piece of code:
+Consider the following simplified piece of code:
 ~~~~~~~~~~~~~~~{.cpp}
 class Printer
 {

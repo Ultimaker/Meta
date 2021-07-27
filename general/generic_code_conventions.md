@@ -42,9 +42,9 @@ In order to provide some control and filtering to this logging, we've defined th
 
 Indenting / trailing whitespaces
 -----
-* You MUST NOT use TABs for indentation.
-* Indenting MUST be done with 4 spaces per indentation level
-* There MUST NOT be trailing whitespaces.
+* You MUST NOT use TABs for indentation. (E101, W191 - default flake8)
+* Indenting MUST be done with 4 spaces per indentation level (E111, indent-size = 4 default flake8 setting)
+* There MUST NOT be trailing whitespaces. (W291 - default flake8) 
 
 Make sure that all editors used enforce these settings, but only for the lines edited to ensure that untouched code remains the same.
 
@@ -59,7 +59,7 @@ Code blocks (not Code::Blocks :))
 * Codeblocks should be used if possible and allowed in the language construction in case of `if`, `while`, `else` and `switch`.
 * Codeblocks should also be used in the declarations of `classes` and `struct`'s.
 * Opening braces should be on the same line as the keywords (e.g. `if`, `while`, `else`) with a single space between the keyword and the brace.
-* Closing braces should be on the same indentation level as the keyword and on a new line after the code block.
+* Closing braces should be on the same indentation level as the keyword and on a new line after the code block. (hang-closing = False default flake8)
 * In the case of adding additional conditions such as using `else`, the second conditional check will be placed after the closing bracket of the first condition block, with a space in between.
 * Any code within a code block must be indented one indentation level deeper.
 
@@ -104,12 +104,12 @@ switch (variable) {
 
 ## Naming conventions
 The following conventions are used for C/C++ naming. 
- * **variables**: `lower_case_with_underscores`
- * **functions**: `lowerCamelCase`
+ * **variables**: `lower_case_with_underscores` (N806, N815 flake8 pep8-naming)
+ * **functions**: `lowerCamelCase` (N802 flake8 pep8-naming)
    > Note that we preceed the function name with a name scope or namespace. If required, that may be capitalized.
    This means that `planner_setMaxJerk()` is correct and `ADC128d818_readLimit()` is also correct.
- * **classes**: `UpperCamelCase`, or `PascalCase`
- * **macros/constants**: `UPPER_CASE_WITH_UNDERSCORES`
+ * **classes**: `UpperCamelCase`, or `PascalCase` (N801 flake8 pep8-naming)
+ * **macros/constants**: `UPPER_CASE_WITH_UNDERSCORES` 
 
 When possible, function names can start with a verb (e.g. get, set, run, execute, validate etc.) or a question (e.g. is, has, can) in order to help with understanding what the implementation is about.
 
@@ -147,13 +147,13 @@ public:
  * MUST only use '{}_number' indicating a counting value, referring to a ordinal number (e.g. first, second, third) nearly always used for communication to a user.
 
 ## Spacing
-* Binary operators (e.g. `+` `-` `*` `/` `=` `+=` `-=` `/=` `*=`) MUST be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`.
+* Binary operators (e.g. `+` `-` `*` `/` `=` `+=` `-=` `/=` `*=`) MUST be enclosed by a space at both sides, except for the operators `->`, `.`, `->*`, `.*`, `,` and `::`. (E225, E226, E227, E228 flake8)
 * After a comma (`,`) there MUST be a space, but not before.
-* In the `for` statement, a space MUST be after the `;`, but not before.
-* When calling a function, the opening parenthesis `(` of the parameters MUST be placed directly after the function name, without inserting a space.
-* When calling the index `[]` operator, don't insert a space before the `[`.
-* If multiple parentheses groups tend to be unreadable, add spaces.
-* Add 2 white lines between functions or 1 when the function has comments or documentation above its declaration.
+* In the `for` statement, a space MUST be after the `;`, but not before. (E203, E231 flake8)
+* When calling a function, the opening parenthesis `(` of the parameters MUST be placed directly after the function name, without inserting a space. (E201 flake8)
+* When calling the index `[]` operator, don't insert a space before the `[`. 
+* If multiple parentheses groups tend to be unreadable, add spaces. (be sure to add `# noqa: E201, E202` as an inline comment to disable these errors)
+* Add 2 white lines between functions or 1 when the function has comments or documentation above its declaration. (E301, E302 flake8)
 
 ### Examples
 #### Good code
@@ -186,7 +186,7 @@ Functions SHOULD be implemented Top-Down, starting with constructors/deconstruct
 Go from public, protected to private. When using a class, one is usually more interested in the public items. For inheriting the protected ones can be interesting, while the private parts should only be meaningful to the maintainer of the class itself.
 
 ## Strings
-Strings MUST be defined by using double quotes.
+Strings MUST be defined by using double quotes. (inline-quotes = double flake8-quotes)
 
 ## Lines and length
 There is no hard limit on the line length, but as a thumb of rule, try to keep it to at most 120 characters.
@@ -207,7 +207,7 @@ Every class SHOULD be in it's own file, unless it's a private class.
 ## Functions
 * If a function needs to return more than one value, the return value could be a dictionary/hashtable construction or a specially defined struct.
 * Output parameters SHOULD NOT be used in C++.
-* The number of arguments to a function, especially when it's a member of a class, should not exceed 5.
+* The number of arguments to a function, especially when it's a member of a class, should not exceed 6. (flake8-functions CFQ0002)
 
 ## Documentation
 [TODO]

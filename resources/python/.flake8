@@ -1,0 +1,39 @@
+[flake8]
+# Ignored but added for preferred line length
+max-line-length = 120
+# Default size, but added for verbosity
+indent-size = 4
+# inline quotes must be double
+inline-quotes = double
+# max McCabe complexity allowed
+max-complexity = 10
+
+ignore =
+  # E266 — too many leading '#' for block comment
+  # Ignore as this is the standard style to doc classes in UM
+  E266
+  # E501 - Max line length exceeded
+  # Ignore as we do not want to set a hard limit, just a guideline
+  E501
+  # CFQ003 - flake8-functions function is not pure
+  # unsure what this checks for
+  CFQ003
+  # CFQ004 - flake8-functions return number
+  # we don't have a set limit on the amount of return statements
+  CFQ004
+
+  # TEMPORARILY HIDING VIOLATIONS
+  # N802 - function name 'someCamelCaseFunction' should be lowercase
+  # Will be ignored until we have decided to change style with sline code
+  N802
+  # E731 do not assign a lambda expression, use a def
+  E731
+
+
+exclude =
+    # No need to traverse our git directory
+    .git,
+    # There's no value in checking cache directories
+    __pycache__,
+    # There's no value in checking the build directory
+    _build_armhf

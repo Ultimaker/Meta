@@ -11,28 +11,29 @@ from jira import JIRA
 from jira.resources import Issue, Sprint, Board
 from jira.client import ResultList
 
-lut = {
-    "new": 0,
-    "todo": 1,
-    "in progress": 2,
-    "review": 3,
-    "ready for qa": 4,
-    "done": 5
-}
-
-api_key = os.environ.get("API_KEY", "")
-api_user = os.environ.get("API_USR", "")
-prj_id = int(os.environ.get("PRJ", 0))
-
-jira = JIRA(
-    'https://ultimaker.atlassian.net/',
-    basic_auth=(api_user, api_key)
-)
-
-PAGE_SIZE = 50
-
 
 class ProgressMonitor():
+    PAGE_SIZE = 50
+
+    lut = {
+        "new": 0,
+        "todo": 1,
+        "in progress": 2,
+        "review": 3,
+        "ready for qa": 4,
+        "done": 5
+    }
+
+    def __init__(self) -> None:
+        api_key = os.environ.get("API_KEY", "")
+        api_user = os.environ.get("API_USR", "")
+
+        self.__jira = JIRA(
+            'https://ultimaker.atlassian.net/',
+            basic_auth=(api_user, api_key)
+        )
+
+        self.prj_id = int(os.environ.get("PRJ", 0))
 
     def get_boards(self, project_id: str) -> List[Board]:
         boards = []
@@ -40,9 +41,9 @@ class ProgressMonitor():
         num_boards = 0
 
         while num_boards < total_boards:
-            all_boards: ResultList[Board] = jira.boards(
+            all_boards: ResultList[Board] = self.__jira.boards(
                 startAt=num_boards,
-                maxResults=PAGE_SIZE,
+                maxResults=self.PAGE_SIZE,
                 projectKeyOrID=project_id
             )
 
@@ -63,10 +64,10 @@ class ProgressMonitor():
         num_sprints = 0
 
         while num_sprints < total_sprints:
-            all_sprints: ResultList[Sprint] = jira.sprints(
+            all_sprints: ResultList[Sprint] = self.__jira.sprints(
                 board_id=board_id,
                 startAt=num_sprints,
-                maxResults=PAGE_SIZE,
+                maxResults=self.PAGE_SIZE,
                 state=state
             )
 
@@ -88,10 +89,10 @@ class ProgressMonitor():
         issues = []
 
         while num_issues < total:
-            all_issues: ResultList[Issue] = jira.search_issues(
+            all_issues: ResultList[Issue] = self.__jira.search_issues(
                 jql,
                 startAt=num_issues,
-                maxResults=PAGE_SIZE
+                maxResults=self.PAGE_SIZE
             )
 
             for issue in all_issues:
@@ -135,7 +136,7 @@ class ProgressMonitor():
         for issue in issues[1:]:
             print(f"\t({issue.key}) '{issue.fields.summary}'")
 
-            status = lut.get(issue.fields.status.name.lower(), -1)
+            status = self.lut.get(issue.fields.status.name.lower(), -1)
 
             if status == -1:
                 print(f"Unknown state '{issue.fields.status.name}'")
@@ -156,8 +157,8 @@ class ProgressMonitor():
         ax = data_frame.plot(marker='o')
         ax.get_legend().remove()
 
-        y_values = list(lut.keys())
-        y_labels = list(lut.values())
+        y_values = list(self.lut.keys())
+        y_labels = list(self.lut.values())
 
         x_values = list(data_frame["date"])
         x_labels = range(0, len(list(data_frame["date"])))
@@ -190,7 +191,7 @@ class ProgressMonitor():
 
 # ---
 pm = ProgressMonitor()
-df, s = pm.monitor_days_in_active_sprints(prj_id)
+df, s = pm.monitor_days_in_active_sprints(pm.prj_id)
 pm.graph_days_in_sprint(df)
 pm.export_graph(f"days_in_{s.id}")
 pm.show_graph()

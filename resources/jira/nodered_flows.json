@@ -1,0 +1,194 @@
+[
+    {
+        "id": "6d8a75918fd777a0",
+        "type": "tab",
+        "label": "JIRA Monitoring",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "27c5d8b5ae958330",
+        "type": "inject",
+        "z": "6d8a75918fd777a0",
+        "name": "It's 08:00 on a weekday",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 08 * * 1,2,3,4,5",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 160,
+        "wires": [
+            [
+                "b1c40c906ba60e24"
+            ]
+        ]
+    },
+    {
+        "id": "3eead32efe2982f5",
+        "type": "debug",
+        "z": "6d8a75918fd777a0",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "493ad57a3a60ef52",
+        "type": "file",
+        "z": "6d8a75918fd777a0",
+        "name": "",
+        "filename": "monitor_ticket_progress.py",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 720,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1e5a404c574f3ad7",
+        "type": "template",
+        "z": "6d8a75918fd777a0",
+        "name": "Monitor Ticket Progress Script",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "python",
+        "syntax": "plain",
+        "template": "from collections import defaultdict\nfrom typing import Dict, List, Tuple, Union\nimport os\nfrom datetime import date\n\nfrom pandas import DataFrame, read_csv\n\nimport matplotlib.pyplot as plt\n\nfrom jira import JIRA\nfrom jira.resources import Issue, Sprint, Board\nfrom jira.client import ResultList\n\nlut = {\n    \"new\": 0,\n    \"todo\": 1,\n    \"in progress\": 2,\n    \"review\": 3,\n    \"ready for qa\": 4,\n    \"done\": 5\n}\n\napi_key = os.environ.get(\"API_KEY\", \"\")\napi_user = os.environ.get(\"API_USR\", \"\")\nprj_id = int(os.environ.get(\"PRJ\", 0))\n\njira = JIRA(\n    'https://ultimaker.atlassian.net/',\n    basic_auth=(api_user, api_key)\n)\n\nPAGE_SIZE = 50\n\n\nclass ProgressMonitor():\n\n    def get_boards(self, project_id: str) -> List[Board]:\n        boards = []\n        total_boards = 1\n        num_boards = 0\n\n        while num_boards < total_boards:\n            all_boards: ResultList[Board] = jira.boards(\n                startAt=num_boards,\n                maxResults=PAGE_SIZE,\n                projectKeyOrID=project_id\n            )\n\n            for board in all_boards:\n                boards.append(board)\n\n            num_boards += len(all_boards)\n            total_boards = all_boards.total\n\n        print(f\"Found '{len(boards)}' boards\")\n        for board in boards:\n            print(f\"\\t({board.id}) '{board.name}'\")\n\n    def get_sprints(self, board_id: int, state: str) -> List[Sprint]:\n        # sprint states:  future, active, closed\n        sprints = []\n        total_sprints = 1\n        num_sprints = 0\n\n        while num_sprints < total_sprints:\n            all_sprints: ResultList[Sprint] = jira.sprints(\n                board_id=board_id,\n                startAt=num_sprints,\n                maxResults=PAGE_SIZE,\n                state=state\n            )\n\n            for sprint in all_sprints:\n                sprints.append(sprint)\n\n            num_sprints += len(all_sprints)\n            total_sprints = all_sprints.total\n\n        print(f\"Found {len(sprints)} '{state}' sprints:\")\n        for sprint in sprints:\n            print(f\"\\t({sprint.id}) '{sprint.name}'\")\n\n        return sprints\n\n    def _grab_issues(self, jql: str) -> List[Issue]:\n        num_issues = 0\n        total = 1\n        issues = []\n\n        while num_issues < total:\n            all_issues: ResultList[Issue] = jira.search_issues(\n                jql,\n                startAt=num_issues,\n                maxResults=PAGE_SIZE\n            )\n\n            for issue in all_issues:\n                issues.append(issue)\n\n            num_issues += len(all_issues)\n            total = all_issues.total\n\n        return issues\n\n    def get_issues_for_sprint(self, sprint_id: int) -> List[Issue]:\n        return self._grab_issues(f\"Sprint={sprint_id}\")\n\n    def read_dataframe(self, sprint_id: int) -> DataFrame:\n        file_name = f\"{sprint_id}_monitor.csv\"\n\n        if os.path.exists(file_name):\n            return read_csv(file_name, index_col=0, header=0)\n\n        return DataFrame(columns=[\"date\"])\n\n    def write_dataframe(self, sprint_id: int, data_frame: DataFrame) -> None:\n        file_name = f\"{sprint_id}_monitor.csv\"\n        data_frame.to_csv(file_name)\n        os.sync()\n\n    def get_issues_for_project(self, project_id: int) -> List[Issue]:\n        jql = f\"project = {project_id} AND type not in (Test)\"\n        return self._grab_issues(jql)\n\n    def monitor_days_in_sprint(self, sprint: Sprint) -> DataFrame:\n        print(f\"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'\")\n        issues = self.get_issues_for_sprint(sprint.id)\n\n        data_frame = self.read_dataframe(sprint.id)\n\n        today = str(date.today())\n        row: Dict[str, Union[str, int]] = {\"date\": today}\n        print(f\"({today}) Tickets in sprint:\")\n\n        for issue in issues[1:]:\n            print(f\"\\t({issue.key}) '{issue.fields.summary}'\")\n\n            status = lut.get(issue.fields.status.name.lower(), -1)\n\n            if status == -1:\n                print(f\"Unknown state '{issue.fields.status.name}'\")\n\n            row[issue.key] = status\n\n        data_frame = data_frame.append(row, ignore_index=True)\n        self.write_dataframe(sprint.id, data_frame)\n        return data_frame\n\n    def monitor_days_in_active_sprints(self, project_id: int) -> Tuple[DataFrame, Sprint]:\n        sprints = self.get_sprints(project_id, \"active\")\n\n        for sprint in sprints:\n            return (self.monitor_days_in_sprint(sprint), sprint)\n\n    def graph_days_in_sprint(self, data_frame: DataFrame) -> None:\n        ax = data_frame.plot(marker='o')\n        ax.get_legend().remove()\n\n        y_values = list(lut.keys())\n        y_labels = list(lut.values())\n\n        x_values = list(data_frame[\"date\"])\n        x_labels = range(0, len(list(data_frame[\"date\"])))\n\n        columns = data_frame.columns.values[1:]\n\n        for x in x_labels:\n            label_jump: Dict[int, int] = defaultdict(lambda: 1)\n            for col in columns:\n                y = data_frame[col][x]\n\n                ax.annotate(\n                    col[5:],\n                    (x, y),\n                    textcoords='offset points',\n                    xytext=(10, 10*label_jump[y]),\n                )\n\n                label_jump[y] += 1\n\n        plt.yticks(y_labels, y_values)\n        plt.xticks(x_labels, x_values)\n\n    def show_graph(self) -> None:\n        plt.show()\n\n    def export_graph(self, file_id: str) -> None:\n        plt.savefig(f\"{file_id}.png\", dpi=300)\n\n\n# ---\npm = ProgressMonitor()\ndf, s = pm.monitor_days_in_active_sprints(prj_id)\npm.graph_days_in_sprint(df)\npm.export_graph(\"monitor\")",
+        "output": "str",
+        "x": 410,
+        "y": 320,
+        "wires": [
+            [
+                "493ad57a3a60ef52"
+            ]
+        ]
+    },
+    {
+        "id": "1d7cd8300af4ce47",
+        "type": "inject",
+        "z": "6d8a75918fd777a0",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 320,
+        "wires": [
+            [
+                "1e5a404c574f3ad7"
+            ]
+        ]
+    },
+    {
+        "id": "b1c40c906ba60e24",
+        "type": "exec",
+        "z": "6d8a75918fd777a0",
+        "command": "API_KEY=${API_KEY} API_USR=${API_USR} PRJ=31 python3 ./monitor_ticket_progress.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Run monitor script",
+        "x": 450,
+        "y": 180,
+        "wires": [
+            [
+                "5d618cc997f9f79b"
+            ],
+            [
+                "3eead32efe2982f5"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "214dddfc36532b95",
+        "type": "e-mail",
+        "z": "6d8a75918fd777a0",
+        "server": "server2.hosting2go.nl",
+        "port": "587",
+        "secure": false,
+        "tls": true,
+        "name": "c.schalkwijk@ultimaker.com",
+        "dname": "",
+        "x": 1140,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5d618cc997f9f79b",
+        "type": "file in",
+        "z": "6d8a75918fd777a0",
+        "name": "",
+        "filename": "monitor.png",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 750,
+        "y": 220,
+        "wires": [
+            [
+                "0df82d4268c134e1"
+            ]
+        ]
+    },
+    {
+        "id": "0df82d4268c134e1",
+        "type": "function",
+        "z": "6d8a75918fd777a0",
+        "name": "",
+        "func": "file = msg.filename;    // create local file variable for convenient reference\nvar d = new Date();     // create current date object for the time string\nvar tstring = d.toString().substring(0,4) + d.toString().substring(15,21);\n\nmsg.attachments =\n     { filename : file.substring(file.lastIndexOf('/')+1,file.length),\n        content : msg.payload };    // content should be a file binary buffer\n        \nmsg.topic = \"Your Daily Report for \" + tstring; // email subject\n\nmsg.payload = \"See attached text file: `\" + msg.attachments.filename + \"`\"; // email body\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 220,
+        "wires": [
+            [
+                "214dddfc36532b95"
+            ]
+        ]
+    }
+]

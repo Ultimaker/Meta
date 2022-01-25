@@ -12,26 +12,16 @@ from jira.resources import Issue, Sprint, Board
 from jira.client import ResultList
 
 
-class ProgressMonitor():
+class ProgressMonitor:
     PAGE_SIZE = 50
 
-    lut = {
-        "new": 0,
-        "todo": 1,
-        "in progress": 2,
-        "review": 3,
-        "ready for qa": 4,
-        "done": 5
-    }
+    lut = {"new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
     def __init__(self) -> None:
         api_key = os.environ.get("API_KEY", "")
         api_user = os.environ.get("API_USR", "")
 
-        self.__jira = JIRA(
-            'https://ultimaker.atlassian.net/',
-            basic_auth=(api_user, api_key)
-        )
+        self.__jira = JIRA("https://ultimaker.atlassian.net/", basic_auth=(api_user, api_key))
 
         self.prj_id = int(os.environ.get("PRJ", 0))
 
@@ -42,9 +32,7 @@ class ProgressMonitor():
 
         while num_boards < total_boards:
             all_boards: ResultList[Board] = self.__jira.boards(
-                startAt=num_boards,
-                maxResults=self.PAGE_SIZE,
-                projectKeyOrID=project_id
+                startAt=num_boards, maxResults=self.PAGE_SIZE, projectKeyOrID=project_id
             )
 
             for board in all_boards:
@@ -65,10 +53,7 @@ class ProgressMonitor():
 
         while num_sprints < total_sprints:
             all_sprints: ResultList[Sprint] = self.__jira.sprints(
-                board_id=board_id,
-                startAt=num_sprints,
-                maxResults=self.PAGE_SIZE,
-                state=state
+                board_id=board_id, startAt=num_sprints, maxResults=self.PAGE_SIZE, state=state
             )
 
             for sprint in all_sprints:
@@ -90,9 +75,7 @@ class ProgressMonitor():
 
         while num_issues < total:
             all_issues: ResultList[Issue] = self.__jira.search_issues(
-                jql,
-                startAt=num_issues,
-                maxResults=self.PAGE_SIZE
+                jql, startAt=num_issues, maxResults=self.PAGE_SIZE
             )
 
             for issue in all_issues:
@@ -154,7 +137,7 @@ class ProgressMonitor():
             return (self.monitor_days_in_sprint(sprint), sprint)
 
     def graph_days_in_sprint(self, data_frame: DataFrame) -> None:
-        ax = data_frame.plot(marker='o')
+        ax = data_frame.plot(marker="o")
         ax.get_legend().remove()
 
         y_values = list(self.lut.keys())
@@ -173,8 +156,8 @@ class ProgressMonitor():
                 ax.annotate(
                     col[5:],
                     (x, y),
-                    textcoords='offset points',
-                    xytext=(10, 10*label_jump[y]),
+                    textcoords="offset points",
+                    xytext=(10, 10 * label_jump[y]),
                 )
 
                 label_jump[y] += 1

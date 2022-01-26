@@ -1,0 +1,2 @@
+# Run scripts are likely to contain API tokens
+resources/jira/run*.sh

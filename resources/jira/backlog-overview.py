@@ -64,14 +64,18 @@ def _count_points(line_elts: List[str]) -> None:
 
 def _log_findings() -> None:
     sorted_labels = list(labels.items())
-    sorted_labels.sort(key=lambda i: -i[1])
+    sorted_labels.sort(key=lambda i: +i[1])
 
     print("Labels:")
     for name, count in sorted_labels:
         print(f"\t{name or 'N.A'}: {count}")
     print("Types:")
+    total_items = 0
+
     for name, count in types.items():
         print("\t%s: %s" % (name, count))
+        total_items += count
+    print("\tTOTAL: %s" % total_items)
 
     print("States:")
     for name, count in states.items():

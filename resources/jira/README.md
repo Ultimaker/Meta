@@ -19,12 +19,14 @@ The flow expects the same environment variables as the script and also requires 
 The flow also creates the python script on the file system, so it's fully autonomous and no additional actions are required to enable the flow.
 
 ## Backlog overview API
-The `backlog-overview_api.py` script provides a highover overview of the **entire** backlog of a project (currently fixed on the board of Team Styx and excluding *epics* and *tests*)
+The `backlog-overview_api.py` script provides a highover overview of the **entire** backlog of a project (excluding *epics* and *tests*).
 
 To execute:
 ```
-API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] ./backlog-overview_api.py
+API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] PRJ=[PRJ_NAME]./backlog-overview_api.py
 ```
+
+Note: this script uses the **name** instead of **id** of a project.
 
 The main data that is taken from the output of this script is the amount of...:
 * tickets per label used

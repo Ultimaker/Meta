@@ -24,6 +24,7 @@ class JiraReport():
     def _grab_issues(self) -> None:
         api_key = os.environ.get("API_KEY", "")
         api_user = os.environ.get("API_USR", "")
+        prj = os.environ.get("PRJ", "")
 
         jira = JIRA(
             'https://ultimaker.atlassian.net/',
@@ -33,9 +34,7 @@ class JiraReport():
         while self._num_issues < self._total:
             print(f"Grabbing {self._num_issues}-{self._num_issues+self._page_size} ({self._total})")
             all_project_issues: ResultList[Issue] = jira.search_issues(
-                'project = MISP',
-                # 'AND type not in (Test, Epic) '
-                # 'AND status in ("new", "todo", "in progress", "review", "ready for qa")',
+                f'project = {prj}',
                 startAt=self._num_issues,
                 maxResults=self._page_size
             )
@@ -68,7 +67,7 @@ class JiraReport():
         print("To refine: %d" % self._labels["to_refine"])
         print("Total SP: %d" % self._sp_count)
 
-    def _is_reject_type_2(self, issue: Issue) -> bool:
+    def _is_reject_type(self, issue: Issue) -> bool:
         issue_type = issue.fields.issuetype.name.lower()
 
         if issue_type in ("test", "epic"):
@@ -78,7 +77,7 @@ class JiraReport():
 
         return False
 
-    def _is_reject_status_2(self, issue: Issue) -> bool:
+    def _is_reject_status(self, issue: Issue) -> bool:
         status = issue.fields.status.name.lower()  # line_elts[status_idx]
         self._states[status] += 1
 
@@ -104,7 +103,7 @@ class JiraReport():
 
         for issue in self._issues:
 
-            if self._is_reject_status_2(issue) or self._is_reject_type_2(issue):
+            if self._is_reject_status(issue) or self._is_reject_type(issue):
                 continue
 
             self._count_labels_2(issue)
@@ -115,13 +114,3 @@ class JiraReport():
 
 jira_report = JiraReport()
 jira_report.create()
-
-for issue in jira_report._issues:
-    json_ticket = json.dumps(issue.raw, indent=4)
-    print(f"__ {json_ticket}")
-    # print(f"{issue.fields.customfield_10028}")
-    # break
-    # print(f"__ {issue.fields.__dir__}")
-    # print(f">>> {issue.fields.labels}")
-    # for fld in issue.fields:
-        # print(f"XX {fld}")

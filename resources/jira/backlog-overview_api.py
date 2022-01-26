@@ -24,7 +24,7 @@ class JiraReport():
     def _grab_issues(self) -> None:
         api_key = os.environ.get("API_KEY", "")
         api_user = os.environ.get("API_USR", "")
-        prj = os.environ.get("PRJ", "")
+        prj = os.environ.get("PRJ_ID", "")
 
         jira = JIRA(
             'https://ultimaker.atlassian.net/',

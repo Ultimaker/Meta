@@ -3,8 +3,7 @@ from typing import Dict, List, Tuple, Union
 import os
 from datetime import date
 
-from pandas import DataFrame, read_csv
-
+import pandas
 import matplotlib.pyplot as plt
 
 from jira import JIRA
@@ -14,8 +13,9 @@ from jira.client import ResultList
 
 class ProgressMonitor:
     PAGE_SIZE = 50
+    DEFAULT_LANE = -1  # See lut: not in sprint
 
-    lut = {"new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
+    lut = {"not in sprint": -1, "new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
     def __init__(self) -> None:
         api_key = os.environ.get("API_KEY", "")
@@ -89,15 +89,15 @@ class ProgressMonitor:
     def get_issues_for_sprint(self, sprint_id: int) -> List[Issue]:
         return self._grab_issues(f"Sprint={sprint_id}")
 
-    def read_dataframe(self, sprint_id: int) -> DataFrame:
+    def read_dataframe(self, sprint_id: int) -> pandas.DataFrame:
         file_name = f"{sprint_id}_monitor.csv"
 
         if os.path.exists(file_name):
-            return read_csv(file_name, index_col=0, header=0)
+            return pandas.read_csv(file_name, index_col=0, header=0).fillna(self.DEFAULT_LANE)
 
-        return DataFrame(columns=["date"])
+        return pandas.DataFrame(columns=["date"]).fillna(self.DEFAULT_LANE)
 
-    def write_dataframe(self, sprint_id: int, data_frame: DataFrame) -> None:
+    def write_dataframe(self, sprint_id: int, data_frame: pandas.DataFrame) -> None:
         file_name = f"{sprint_id}_monitor.csv"
         data_frame.to_csv(file_name)
         os.sync()
@@ -106,7 +106,7 @@ class ProgressMonitor:
         jql = f"project = {project_id} AND type not in (Test)"
         return self._grab_issues(jql)
 
-    def monitor_days_in_sprint(self, sprint: Sprint) -> DataFrame:
+    def monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
         print(f"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'")
         issues = self.get_issues_for_sprint(sprint.id)
 
@@ -126,17 +126,17 @@ class ProgressMonitor:
 
             row[issue.key] = status
 
-        data_frame = data_frame.append(row, ignore_index=True)
-        self.write_dataframe(sprint.id, data_frame)
+        data_frame = data_frame.append(row, ignore_index=True).fillna(self.DEFAULT_LANE)
+        # self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
-    def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[DataFrame, Sprint]:
+    def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[pandas.DataFrame, Sprint]:
         sprints = self.get_sprints(board_id, "active")
 
         for sprint in sprints:
             return (self.monitor_days_in_sprint(sprint), sprint)
 
-    def graph_days_in_sprint(self, data_frame: DataFrame) -> None:
+    def graph_days_in_sprint(self, data_frame: pandas.DataFrame) -> None:
         ax = data_frame.plot(marker="o")
         ax.get_legend().remove()
 
@@ -146,6 +146,28 @@ class ProgressMonitor:
         x_values = list(data_frame["date"])
         x_labels = range(0, len(list(data_frame["date"])))
 
+        # self._annotate_with_ticket_ids(ax, data_frame, x_labels)
+        self._annotate_with_ticket_count(ax, data_frame, x_labels)
+
+        plt.yticks(y_labels, y_values)
+        plt.xticks(x_labels, x_values, rotation=45)
+
+    def _annotate_with_ticket_count(self, ax, data_frame, x_labels) -> None:
+        df_ticket_count = df.drop("date", 1).apply(pandas.Series.value_counts, axis=1).fillna(0)
+        columns = data_frame.columns.values[1:]
+
+        for x in x_labels:
+            for col in columns:
+                y = data_frame[col][x]
+
+                ax.annotate(
+                    f"[{int(df_ticket_count[y][x])}]",
+                    (x, y),
+                    textcoords="offset points",
+                    xytext=(5, 5),
+                )
+
+    def _annotate_with_ticket_ids(self, ax, data_frame, x_labels) -> None:
         columns = data_frame.columns.values[1:]
 
         for x in x_labels:
@@ -162,9 +184,6 @@ class ProgressMonitor:
 
                 label_jump[y] += 1
 
-        plt.yticks(y_labels, y_values)
-        plt.xticks(x_labels, x_values)
-
     def show_graph(self) -> None:
         plt.show()
 
@@ -176,5 +195,5 @@ class ProgressMonitor:
 pm = ProgressMonitor()
 df, s = pm.monitor_days_in_active_sprints(pm.board_id)
 pm.graph_days_in_sprint(df)
-pm.export_graph(f"days_in_{s.id}")
+ pm.export_graph(f"days_in_{s.id}")
 pm.show_graph()

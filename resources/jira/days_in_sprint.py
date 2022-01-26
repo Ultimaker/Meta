@@ -23,7 +23,7 @@ class ProgressMonitor:
 
         self.__jira = JIRA("https://ultimaker.atlassian.net/", basic_auth=(api_user, api_key))
 
-        self.prj_id = int(os.environ.get("PRJ", 0))
+        self.board_id = int(os.environ.get("BOARD_ID", 0))
 
     def get_boards(self, project_id: str) -> List[Board]:
         boards = []
@@ -130,8 +130,8 @@ class ProgressMonitor:
         self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
-    def monitor_days_in_active_sprints(self, project_id: int) -> Tuple[DataFrame, Sprint]:
-        sprints = self.get_sprints(project_id, "active")
+    def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[DataFrame, Sprint]:
+        sprints = self.get_sprints(board_id, "active")
 
         for sprint in sprints:
             return (self.monitor_days_in_sprint(sprint), sprint)
@@ -174,7 +174,7 @@ class ProgressMonitor:
 
 # ---
 pm = ProgressMonitor()
-df, s = pm.monitor_days_in_active_sprints(pm.prj_id)
+df, s = pm.monitor_days_in_active_sprints(pm.board_id)
 pm.graph_days_in_sprint(df)
 pm.export_graph(f"days_in_{s.id}")
 pm.show_graph()

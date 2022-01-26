@@ -9,10 +9,15 @@ This can help to analyze team behavior with regard to handling tickets in a spri
 
 To execute:
 ```
-API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] ./days_in_sprint.py
+API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
 ```
 
-The project ID is the Jira project ID.
+The `BOARD_ID` is a Jira, project specific, board ID. This can be found in the URL of the sprint board, e.g.:
+```
+https://ultimaker.atlassian.net/jira/software/c/projects/MISP/boards/31
+```
+
+Where the project ID is `MISP` and the board id is `31`.
 
 The `nodered_flows.json` is a NodeRed flow, automating the execution of the script every work day on 08:00 and sends an export of the graph via mail.
 The flow expects the same environment variables as the script and also requires a password for sending the report by mail.
@@ -23,10 +28,8 @@ The `backlog-overview_api.py` script provides a highover overview of the **entir
 
 To execute:
 ```
-API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] PRJ=[PRJ_NAME]./backlog-overview_api.py
+API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ_ID=[PROJECT_ID]./backlog-overview_api.py
 ```
-
-Note: this script uses the **name** instead of **id** of a project.
 
 The main data that is taken from the output of this script is the amount of...:
 * tickets per label used

@@ -13,7 +13,7 @@ This can help to analyze team behavior with regard to handling tickets in a spri
 
 To execute:
 ```
-JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
+JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] JIRA_BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
 ```
 
 The `BOARD_ID` is a Jira, project specific, board ID. This can be found in the URL of the sprint board, e.g.:
@@ -32,7 +32,7 @@ The `backlog-overview_api.py` script provides a highover overview of the **entir
 
 To execute:
 ```
-JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] PRJ_ID=[PROJECT_ID]./backlog-overview_api.py
+JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] JIRA_PRJ_ID=[PROJECT_ID]./backlog-overview_api.py
 ```
 
 The main data that is taken from the output of this script is the amount of...:

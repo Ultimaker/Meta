@@ -1,8 +1,43 @@
+# Jira Resources
+A set of (Python) script to automate JIRA related tasks, reporting and/or monitoring.
 Not everything can be done in Jira, for example counting all the assigned storypoint for a particular backlog.
-The `backlog-overview.py` script creates an overview of detail information from a backlog export from Jira.
 
-# How to use
-Go to, in the sidebar, `Issues` > `View all issues and filters`.
+## Days In Sprint
+The `days_in_sprint.py` script records snapshots of the current lane a ticket is in for an active sprint.
+The results are writen to a csv file and appended to with every execution of the script.
+This can help to analyze team behavior with regard to handling tickets in a sprint.
+
+To execute:
+```
+API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] ./days_in_sprint.py
+```
+
+The project ID is the Jira project ID.
+
+The `nodered_flows.json` is a NodeRed flow, automating the execution of the script every work day on 08:00 and sends an export of the graph via mail.
+The flow expects the same environment variables as the script and also requires a password for sending the report by mail.
+The flow also creates the python script on the file system, so it's fully autonomous and no additional actions are required to enable the flow.
+
+## Backlog overview API
+The `backlog-overview_api.py` script provides a highover overview of the **entire** backlog of a project (currently fixed on the board of Team Styx and excluding *epics* and *tests*)
+
+To execute:
+```
+API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ=[PROJECT_ID] ./backlog-overview_api.py
+```
+
+The main data that is taken from the output of this script is the amount of...:
+* tickets per label used
+* bugs, features and tasks
+* items to refine (labeled `TO_REFINE`)
+* open tickets (not *done* or *rejected*)
+* storypoints assigned to open tickets.
+
+## Backlog overview
+This is the *manual* version of the previous script and requires an export of Jira tickets from a project.
+
+### How to use
+In Jira, go to (in the sidebar) `Issues` > `View all issues and filters`.
 Make sure the view contains the columns `Issue Type`, `Labels`, `Status` and `Story Points` (custom field).
 Export as CVS, with semi-colon (;) separated.
 
@@ -10,11 +45,3 @@ Export as CVS, with semi-colon (;) separated.
 $ python3 backlog-overview.py [EXPORTED_FILE_NAME].csv
 ```
 
-The script will output the following details to std-out:
-* Number of items per found ticket state
-
-For everything that is not `Done` or `Rejected`:
-* All used labels with a counter
-* Number of bugs, new features and tasks
-* Number of items labeled `TO_REFINE`
-* Total amount of story points

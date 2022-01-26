@@ -2,6 +2,10 @@
 A set of (Python) script to automate JIRA related tasks, reporting and/or monitoring.
 Not everything can be done in Jira, for example counting all the assigned storypoint for a particular backlog.
 
+## Requesting an API key
+Go to `https://id.atlassian.com/manage-profile/security/api-tokens` to request an API token you need to execute the scripts in this directory.
+The `JIRA_API_USR` key value is the e-mail address you use to sign in wiht Jira.
+
 ## Days In Sprint
 The `days_in_sprint.py` script records snapshots of the current lane a ticket is in for an active sprint.
 The results are writen to a csv file and appended to with every execution of the script.
@@ -9,7 +13,7 @@ This can help to analyze team behavior with regard to handling tickets in a spri
 
 To execute:
 ```
-API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
+JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
 ```
 
 The `BOARD_ID` is a Jira, project specific, board ID. This can be found in the URL of the sprint board, e.g.:
@@ -28,7 +32,7 @@ The `backlog-overview_api.py` script provides a highover overview of the **entir
 
 To execute:
 ```
-API_KEY=[JIRA_API_KEY] API_USR=[JIRA_API_USER] PRJ_ID=[PROJECT_ID]./backlog-overview_api.py
+JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] PRJ_ID=[PROJECT_ID]./backlog-overview_api.py
 ```
 
 The main data that is taken from the output of this script is the amount of...:

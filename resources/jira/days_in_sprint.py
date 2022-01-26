@@ -17,13 +17,13 @@ class ProgressMonitor:
 
     lut = {"not in sprint": -1, "new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
-    def __init__(self) -> None:
-        api_key = os.environ.get("API_KEY", "")
-        api_user = os.environ.get("API_USR", "")
+    def __init__(self, api_key: str, api_usr: str, board_id: int) -> None:
+        api_key = os.environ.get("JIRA_API_KEY", "")
+        api_usr = os.environ.get("JIRA_API_USR", "")
 
-        self.__jira = JIRA("https://ultimaker.atlassian.net/", basic_auth=(api_user, api_key))
+        self._jira = JIRA("https://ultimaker.atlassian.net/", basic_auth=(api_usr, api_key))
 
-        self.board_id = int(os.environ.get("BOARD_ID", 0))
+        self.board_id = board_id
 
     def get_boards(self, project_id: str) -> List[Board]:
         boards = []
@@ -31,7 +31,7 @@ class ProgressMonitor:
         num_boards = 0
 
         while num_boards < total_boards:
-            all_boards: ResultList[Board] = self.__jira.boards(
+            all_boards: ResultList[Board] = self._jira.boards(
                 startAt=num_boards, maxResults=self.PAGE_SIZE, projectKeyOrID=project_id
             )
 
@@ -52,7 +52,7 @@ class ProgressMonitor:
         num_sprints = 0
 
         while num_sprints < total_sprints:
-            all_sprints: ResultList[Sprint] = self.__jira.sprints(
+            all_sprints: ResultList[Sprint] = self._jira.sprints(
                 board_id=board_id, startAt=num_sprints, maxResults=self.PAGE_SIZE, state=state
             )
 
@@ -74,7 +74,7 @@ class ProgressMonitor:
         issues = []
 
         while num_issues < total:
-            all_issues: ResultList[Issue] = self.__jira.search_issues(
+            all_issues: ResultList[Issue] = self._jira.search_issues(
                 jql, startAt=num_issues, maxResults=self.PAGE_SIZE
             )
 
@@ -127,7 +127,7 @@ class ProgressMonitor:
             row[issue.key] = status
 
         data_frame = data_frame.append(row, ignore_index=True).fillna(self.DEFAULT_LANE)
-        # self.write_dataframe(sprint.id, data_frame)
+        self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
     def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[pandas.DataFrame, Sprint]:
@@ -192,8 +192,11 @@ class ProgressMonitor:
 
 
 # ---
-pm = ProgressMonitor()
+api_key = os.environ.get("JIRA_API_KEY", "")
+api_usr = os.environ.get("JIRA_API_USR", "")
+board_id = int(os.environ.get("JIRA_BOARD_ID", 0))
+pm = ProgressMonitor(api_key, api_usr, board_id)
 df, s = pm.monitor_days_in_active_sprints(pm.board_id)
 pm.graph_days_in_sprint(df)
- pm.export_graph(f"days_in_{s.id}")
+pm.export_graph(f"days_in_{s.id}")
 pm.show_graph()

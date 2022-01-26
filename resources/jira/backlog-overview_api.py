@@ -9,7 +9,9 @@ from jira.client import ResultList
 
 class JiraReport():
 
-    def __init__(self) -> None:
+    PAGE_SIZE = 50
+
+    def __init__(self, api_key: str, api_usr: str, project_id: str) -> None:
         self._num_issues = 0
         self._total = 1
         self._issues: List[Issue] = []
@@ -19,24 +21,21 @@ class JiraReport():
 
         self._types: Dict[str, int] = defaultdict(int)
         self._states: Dict[str, int] = defaultdict(int)
-        self._page_size = 50
 
-    def _grab_issues(self) -> None:
-        api_key = os.environ.get("API_KEY", "")
-        api_user = os.environ.get("API_USR", "")
-        prj = os.environ.get("PRJ_ID", "")
-
-        jira = JIRA(
+        self._project_id = project_id
+        self._jira = JIRA(
             'https://ultimaker.atlassian.net/',
             basic_auth=(api_user, api_key)
         )
 
+
+    def _grab_issues(self) -> None:
         while self._num_issues < self._total:
-            print(f"Grabbing {self._num_issues}-{self._num_issues+self._page_size} ({self._total})")
-            all_project_issues: ResultList[Issue] = jira.search_issues(
-                f'project = {prj}',
+            print(f"Grabbing {self._num_issues}-{self._num_issues+self.PAGE_SIZE} ({self._total})")
+            all_project_issues: ResultList[Issue] = self._jira.search_issues(
+                f'project = {self._project_id}',
                 startAt=self._num_issues,
-                maxResults=self._page_size
+                maxResults=self.PAGE_SIZE
             )
 
             for issue in all_project_issues:
@@ -112,5 +111,10 @@ class JiraReport():
         self._log_findings()
 
 
-jira_report = JiraReport()
+# -----------------------
+api_key = os.environ.get("JIRA_API_KEY", "")
+api_user = os.environ.get("JIRA_API_USR", "")
+prj_id = os.environ.get("JIRA_PRJ_ID", "")
+
+jira_report = JiraReport(api_key, api_user, prj_id)
 jira_report.create()

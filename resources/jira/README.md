@@ -4,7 +4,7 @@ Not everything can be done in Jira, for example counting all the assigned storyp
 
 ## Requesting an API key
 Go to `https://id.atlassian.com/manage-profile/security/api-tokens` to request an API token you need to execute the scripts in this directory.
-The `JIRA_API_USR` key value is the e-mail address you use to sign in wiht Jira.
+The `JIRA_API_USR` key value is the e-mail address you use to sign in with Jira.
 
 ## Days In Sprint
 The `days_in_sprint.py` script records snapshots of the current lane a ticket is in for an active sprint.

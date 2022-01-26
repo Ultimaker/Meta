@@ -16,7 +16,7 @@ To execute:
 JIRA_API_KEY=[JIRA_API_KEY] JIRA_API_USR=[JIRA_API_USER] JIRA_BOARD_ID=[PROJECT_ID] ./days_in_sprint.py
 ```
 
-The `BOARD_ID` is a Jira, project specific, board ID. This can be found in the URL of the sprint board, e.g.:
+The `JIRA_BOARD_ID` is a Jira, project specific, board ID. This can be found in the URL of the sprint board, e.g.:
 ```
 https://ultimaker.atlassian.net/jira/software/c/projects/MISP/boards/31
 ```

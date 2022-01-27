@@ -3,91 +3,25 @@ from typing import Dict, List, Tuple, Union
 import os
 from datetime import date
 
+from jira.resources import Issue, Sprint
 import pandas
 import matplotlib.pyplot as plt
 
-from jira import JIRA
-from jira.resources import Issue, Sprint, Board
-from jira.client import ResultList
+from jiraSDK import JiraSDK
+from slackSDK import SlackSDK
 
 
 class ProgressMonitor:
-    PAGE_SIZE = 50
     DEFAULT_LANE = -1  # See lut: not in sprint
 
     lut = {"not in sprint": -1, "new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
-    def __init__(self, api_key: str, api_usr: str, board_id: int) -> None:
-        api_key = os.environ.get("JIRA_API_KEY", "")
-        api_usr = os.environ.get("JIRA_API_USR", "")
-
-        self._jira = JIRA("https://ultimaker.atlassian.net/", basic_auth=(api_usr, api_key))
-
+    def __init__(self, jira_sdk, board_id: int) -> None:
+        self._jira_sdk = jira_sdk
         self.board_id = board_id
 
-    def get_boards(self, project_id: str) -> List[Board]:
-        boards = []
-        total_boards = 1
-        num_boards = 0
-
-        while num_boards < total_boards:
-            all_boards: ResultList[Board] = self._jira.boards(
-                startAt=num_boards, maxResults=self.PAGE_SIZE, projectKeyOrID=project_id
-            )
-
-            for board in all_boards:
-                boards.append(board)
-
-            num_boards += len(all_boards)
-            total_boards = all_boards.total
-
-        print(f"Found '{len(boards)}' boards")
-        for board in boards:
-            print(f"\t({board.id}) '{board.name}'")
-
-    def get_sprints(self, board_id: int, state: str) -> List[Sprint]:
-        # sprint states:  future, active, closed
-        sprints = []
-        total_sprints = 1
-        num_sprints = 0
-
-        while num_sprints < total_sprints:
-            all_sprints: ResultList[Sprint] = self._jira.sprints(
-                board_id=board_id, startAt=num_sprints, maxResults=self.PAGE_SIZE, state=state
-            )
-
-            for sprint in all_sprints:
-                sprints.append(sprint)
-
-            num_sprints += len(all_sprints)
-            total_sprints = all_sprints.total
-
-        print(f"Found {len(sprints)} '{state}' sprints:")
-        for sprint in sprints:
-            print(f"\t({sprint.id}) '{sprint.name}'")
-
-        return sprints
-
-    def _grab_issues(self, jql: str) -> List[Issue]:
-        num_issues = 0
-        total = 1
-        issues = []
-
-        while num_issues < total:
-            all_issues: ResultList[Issue] = self._jira.search_issues(
-                jql, startAt=num_issues, maxResults=self.PAGE_SIZE
-            )
-
-            for issue in all_issues:
-                issues.append(issue)
-
-            num_issues += len(all_issues)
-            total = all_issues.total
-
-        return issues
-
     def get_issues_for_sprint(self, sprint_id: int) -> List[Issue]:
-        return self._grab_issues(f"Sprint={sprint_id}")
+        return self._jira_sdk.grab_issues(f"Sprint={sprint_id}")
 
     def read_dataframe(self, sprint_id: int) -> pandas.DataFrame:
         file_name = f"{sprint_id}_monitor.csv"
@@ -104,7 +38,7 @@ class ProgressMonitor:
 
     def get_issues_for_project(self, project_id: int) -> List[Issue]:
         jql = f"project = {project_id} AND type not in (Test)"
-        return self._grab_issues(jql)
+        return self._jira_sdk.grab_issues(jql)
 
     def monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
         print(f"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'")
@@ -127,14 +61,14 @@ class ProgressMonitor:
             row[issue.key] = status
 
         data_frame = data_frame.append(row, ignore_index=True).fillna(self.DEFAULT_LANE)
-        self.write_dataframe(sprint.id, data_frame)
+        # self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
     def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[pandas.DataFrame, Sprint]:
-        sprints = self.get_sprints(board_id, "active")
+        sprints = self._jira_sdk.get_sprints(board_id, "active")
+        sprint = sprints[0]
 
-        for sprint in sprints:
-            return (self.monitor_days_in_sprint(sprint), sprint)
+        return (self.monitor_days_in_sprint(sprint), sprint)
 
     def graph_days_in_sprint(self, data_frame: pandas.DataFrame) -> None:
         ax = data_frame.plot(marker="o")
@@ -187,16 +121,27 @@ class ProgressMonitor:
     def show_graph(self) -> None:
         plt.show()
 
-    def export_graph(self, file_id: str) -> None:
-        plt.savefig(f"{file_id}.png", dpi=300)
+    def export_graph(self, file_name: str) -> None:
+        plt.savefig(file_name, dpi=300)
 
 
 # ---
 api_key = os.environ.get("JIRA_API_KEY", "")
 api_usr = os.environ.get("JIRA_API_USR", "")
-board_id = int(os.environ.get("JIRA_BOARD_ID", 0))
-pm = ProgressMonitor(api_key, api_usr, board_id)
+bid = int(os.environ.get("JIRA_BOARD_ID", 0))
+
+js = JiraSDK(api_key, api_usr)
+pm = ProgressMonitor(js, bid)
+
 df, s = pm.monitor_days_in_active_sprints(pm.board_id)
 pm.graph_days_in_sprint(df)
-pm.export_graph(f"days_in_{s.id}")
-pm.show_graph()
+fn = f"days_in_{s.id}.png"
+pm.export_graph(fn)
+# pm.show_graph()
+
+# ---
+channel_id = os.environ.get("SLACK_CHANNEL_ID", "")
+app_token = os.environ.get("SLACK_BOT_TOKEN", "")
+
+slack_sdk = SlackSDK(app_token, channel_id)
+slack_sdk.send_file(fn, "HELLOE!")

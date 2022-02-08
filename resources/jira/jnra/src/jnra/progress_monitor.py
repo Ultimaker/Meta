@@ -1,18 +1,18 @@
 from collections import defaultdict
-from typing import Dict, List, Tuple, Union
 import os
-
 import time
+from typing import Any, Dict, List, Tuple, Union
 
 from jira.resources import Issue, Sprint
-import pandas
 import matplotlib.pyplot as plt
+import pandas
 
 from jiraSDK import JiraSDK
 
 
 class ProgressMonitor:
     DEFAULT_LANE = -1  # See lut: not in sprint
+    SHIFT_DISTANCE = 0.06  # factor of plot height.
 
     lut = {"not in sprint": -1, "new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
@@ -42,9 +42,8 @@ class ProgressMonitor:
 
     def monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
         print(f"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'")
-        issues = self.get_issues_for_sprint(sprint.id)
-
         data_frame = self.read_dataframe(sprint.id)
+        issues = self.get_issues_for_sprint(sprint.id)
 
         today = time.strftime("%m/%d %H:%M", time.localtime())
 
@@ -72,9 +71,10 @@ class ProgressMonitor:
         return (self.monitor_days_in_sprint(sprint), sprint)
 
     def graph_days_in_sprint(self, data_frame: pandas.DataFrame) -> None:
-        ax = data_frame.plot(marker="o")
+        ax = plt.subplot()
 
-        plt.legend(bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0)
+        # For other color maps, see: https://matplotlib.org/stable/tutorials/colors/colormaps.html
+        ax.set_prop_cycle(plt.cycler("color", plt.cm.tab20.colors))
 
         y_values = list(self.lut.keys())
         y_labels = list(self.lut.values())
@@ -82,11 +82,37 @@ class ProgressMonitor:
         x_values = list(data_frame["date"])
         x_labels = range(0, len(list(data_frame["date"])))
 
+        idx: Dict[Tuple[int, Any], int] = defaultdict(lambda: 0)
+
+        for name, values in data_frame.set_index("date").iteritems():
+            # Some ranges have close lying colors, using the following loop,
+            # forces the color cycler to use a more different color:
+            # for x in range(15):
+            #     ax._get_lines.get_next_color()
+
+            # For a regular plot, with overlapping lines, use:
+            # ax.plot(x_labels, values, marker='o', label=name, transform=trans3)
+
+            # Shift data points:
+            for x, value in enumerate(values):
+                shift = idx[(x_labels[x], value)]
+                values[x] += shift * self.SHIFT_DISTANCE
+                idx[(x_labels[x], value)] += 1
+
+            ax.plot(x_labels, values, label=name)
+
+        plt.grid(True)
+
+        # Show ticket labels at datapoints:
         # self._annotate_with_ticket_ids(ax, data_frame, x_labels)
-        self._annotate_with_ticket_count(ax, data_frame, x_labels)
+
+        # Show ticket count at datapoints:
+        # self._annotate_with_ticket_count(ax, data_frame, x_labels)
 
         plt.yticks(y_labels, y_values)
         plt.xticks(x_labels, x_values, rotation=45)
+
+        plt.legend(bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0)
 
     def _annotate_with_ticket_count(self, ax, data_frame, x_labels) -> None:
         df_ticket_count = data_frame.drop("date", axis=1).apply(pandas.Series.value_counts, axis=1).fillna(0)

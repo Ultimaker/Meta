@@ -1,10 +1,4 @@
-import logging
-import os
-
 from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
-
-logger = logging.getLogger(__name__)
 
 
 class SlackSDK:
@@ -15,16 +9,9 @@ class SlackSDK:
 
     def send_file(self, file_name: str, message: str) -> None:
         print(f"Sending to slack '{file_name}'")
-        try:
-            result = self._client.files_upload(
-                channels=self._channel_id,
-                initial_comment=message,
-                file=file_name,
-            )
 
-            logger.info(result)
-            print(">> RES ", result)
-
-        except SlackApiError as e:
-            print(">> ERR")
-            logger.error("Error uploading file: {}".format(e))
+        self._client.files_upload(
+            channels=self._channel_id,
+            initial_comment=message,
+            file=file_name,
+        )

@@ -1,2 +1,6 @@
 # Run scripts are likely to contain API tokens
 resources/jira/run*.sh
+
+resources/jira/jnra/dist/*
+*.egg-info
+__pycache__

@@ -7,7 +7,8 @@ from jira.resources import Issue, Sprint
 import matplotlib.pyplot as plt
 import pandas
 
-from jiraSDK import JiraSDK
+from jnra.jiraSDK import JiraSDK
+from jira.resources import Issue, Sprint
 
 
 class ProgressMonitor:

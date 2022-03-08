@@ -1,7 +1,7 @@
 import os
 
-from jiraSDK import JiraSDK
-from jira_report import JiraReport
+from jnra.jiraSDK import JiraSDK
+from jnra.jira_report import JiraReport
 
 api_key = os.environ.get("JIRA_API_KEY", "")
 api_usr = os.environ.get("JIRA_API_USR", "")

@@ -3,7 +3,7 @@ from typing import Dict
 
 from jira.resources import Issue
 
-from .jiraSDK import JiraSDK
+from jnra.jiraSDK import JiraSDK
 
 
 class JiraReport:

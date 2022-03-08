@@ -2,5 +2,6 @@
 resources/jira/run*.sh
 
 resources/jira/jnra/dist/*
+*.whl
 *.egg-info
 __pycache__

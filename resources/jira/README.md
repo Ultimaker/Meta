@@ -24,6 +24,8 @@ https://ultimaker.atlassian.net/jira/software/c/projects/MISP/boards/31
 Where the project ID is `MISP` and the board id is `31`.
 
 The `nodered_flows.json` is a NodeRed flow, automating the execution of the script every work day on 08:00 and sends an export of the graph via mail.
+The file is provided as an *example* only!
+
 The flow expects the same environment variables as the script and also requires a password for sending the report by mail.
 The flow also creates the python script on the file system, so it's fully autonomous and no additional actions are required to enable the flow.
 

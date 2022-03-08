@@ -15,10 +15,17 @@ class ProgressMonitor:
     SHIFT_DISTANCE = 0.06  # factor of plot height.
     DATETIME_FORMAT = "%Y/%m/%d %H:%M"
     DPI = 300
-    WEEKDAYS = ["Mon","Tues","Wed","Thu","Fri","Sat","Sun"]
+    WEEKDAYS = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     state_labels = {"Not In Sprint": DEFAULT_LANE, "Todo": 1, "In Progress": 2, "Review": 3, "QA": 4, "Done": 5}
-    lookup_states = {"not in sprint": DEFAULT_LANE, "new": 1, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
+    lookup_states = {
+        "not in sprint": DEFAULT_LANE,
+        "new": 1, "todo": 1,  # States 'new' and 'todo' are handled the same
+        "in progress": 2,
+        "review": 3,
+        "ready for qa": 4,
+        "done": 5
+    }
 
     def __init__(self, jira_sdk: JiraSDK, board_id: int) -> None:
         self._jira_sdk = jira_sdk
@@ -45,7 +52,7 @@ class ProgressMonitor:
         return self._jira_sdk.grab_issues(jql)
 
     def monitor_days(self, sprints: List[Sprint]) -> List[pandas.DataFrame]:
-        sprint_frames:List[pandas.DataFrame] = []
+        sprint_frames: List[pandas.DataFrame] = []
 
         for sprint in sprints:
             sprint_frames.append(self._monitor_days_in_sprint(sprint))
@@ -55,7 +62,6 @@ class ProgressMonitor:
     def _monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
         print(f"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'")
         data_frame = self.read_dataframe(sprint.id)
-        return data_frame
         issues = self.get_issues_for_sprint(sprint.id)
 
         today = datetime.today().strftime(self.DATETIME_FORMAT)
@@ -77,12 +83,12 @@ class ProgressMonitor:
         # self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
-    def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[pandas.DataFrame, Sprint]:
+    def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[List[pandas.DataFrame], List[Sprint]]:
         sprints = self._jira_sdk.get_sprints(board_id, "active")
         return (self.monitor_days(sprints), sprints)
 
     def graph_days(self, data_frames: List[pandas.DataFrame], sprints: List[Sprint]) -> None:
-        fig, ax = plt.subplots(
+        _fig, ax = plt.subplots(
             1, len(data_frames),
             sharey='all',
             figsize=(18, 10)  # [inch]
@@ -92,7 +98,7 @@ class ProgressMonitor:
             ax[idx].set_title(f"({sprints[idx].id}) '{sprints[idx].name}'")
             self._graph_days_in_sprint(data_frame, ax[idx])
 
-    def _graph_days_in_sprint(self, data_frame: pandas.DataFrame, ax) -> None:
+    def _graph_days_in_sprint(self, data_frame: pandas.DataFrame, ax: plt.Axes) -> None:
         y_labels = list(self.state_labels.keys())
         y_values = list(self.state_labels.values())
 
@@ -148,7 +154,12 @@ class ProgressMonitor:
 
         return weekdays
 
-    def _annotate_with_ticket_count(self, ax, data_frame, x_values) -> None:
+    def _annotate_with_ticket_count(
+            self,
+            ax: plt.Axes,
+            data_frame: pandas.DataFrame,
+            x_values: List[float]
+    ) -> None:
         df_ticket_count = data_frame.drop("date", axis=1).apply(pandas.Series.value_counts, axis=1).fillna(0)
         columns = data_frame.columns.values[1:]
 
@@ -165,7 +176,12 @@ class ProgressMonitor:
                     size=8
                 )
 
-    def _annotate_with_ticket_ids(self, ax, data_frame, x_values) -> None:
+    def _annotate_with_ticket_ids(
+            self,
+            ax: plt.Axes,
+            data_frame: pandas.DataFrame,
+            x_values: List[float]
+    ) -> None:
         columns = data_frame.columns.values[1:]
 
         for x in x_values:

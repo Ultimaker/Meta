@@ -1,9 +1,8 @@
 from collections import defaultdict
+from datetime import datetime
 import os
-import time
 from typing import Any, Dict, List, Tuple, Union
 
-from jira.resources import Issue, Sprint
 import matplotlib.pyplot as plt
 import pandas
 
@@ -12,10 +11,14 @@ from jira.resources import Issue, Sprint
 
 
 class ProgressMonitor:
-    DEFAULT_LANE = -1  # See lut: not in sprint
+    DEFAULT_LANE = 0  # See state_labels: not in sprint
     SHIFT_DISTANCE = 0.06  # factor of plot height.
+    DATETIME_FORMAT = "%Y/%m/%d %H:%M"
+    DPI = 300
+    WEEKDAYS = ["Mon","Tues","Wed","Thu","Fri","Sat","Sun"]
 
-    lut = {"not in sprint": -1, "new": 0, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
+    state_labels = {"Not In Sprint": DEFAULT_LANE, "Todo": 1, "In Progress": 2, "Review": 3, "QA": 4, "Done": 5}
+    lookup_states = {"not in sprint": DEFAULT_LANE, "new": 1, "todo": 1, "in progress": 2, "review": 3, "ready for qa": 4, "done": 5}
 
     def __init__(self, jira_sdk: JiraSDK, board_id: int) -> None:
         self._jira_sdk = jira_sdk
@@ -41,12 +44,21 @@ class ProgressMonitor:
         jql = f"project = {project_id} AND type not in (Test)"
         return self._jira_sdk.grab_issues(jql)
 
-    def monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
+    def monitor_days(self, sprints: List[Sprint]) -> List[pandas.DataFrame]:
+        sprint_frames:List[pandas.DataFrame] = []
+
+        for sprint in sprints:
+            sprint_frames.append(self._monitor_days_in_sprint(sprint))
+
+        return sprint_frames
+
+    def _monitor_days_in_sprint(self, sprint: Sprint) -> pandas.DataFrame:
         print(f"Monitoring days in sprint: ({sprint.id}) '{sprint.name}'")
         data_frame = self.read_dataframe(sprint.id)
+        return data_frame
         issues = self.get_issues_for_sprint(sprint.id)
 
-        today = time.strftime("%m/%d %H:%M", time.localtime())
+        today = datetime.today().strftime(self.DATETIME_FORMAT)
 
         row: Dict[str, Union[str, int]] = {"date": today}
         print(f"({today}) Tickets in sprint:")
@@ -54,7 +66,7 @@ class ProgressMonitor:
         for issue in issues[1:]:
             print(f"\t({issue.key}) '{issue.fields.summary}'")
 
-            status = self.lut.get(issue.fields.status.name.lower(), -1)
+            status = self.lookup_states.get(issue.fields.status.name.lower(), -1)
 
             if status == -1:
                 print(f"Unknown state '{issue.fields.status.name}'")
@@ -62,26 +74,33 @@ class ProgressMonitor:
             row[issue.key] = status
 
         data_frame = data_frame.append(row, ignore_index=True).fillna(self.DEFAULT_LANE)
-        self.write_dataframe(sprint.id, data_frame)
+        # self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
     def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[pandas.DataFrame, Sprint]:
         sprints = self._jira_sdk.get_sprints(board_id, "active")
-        sprint = sprints[0]
+        return (self.monitor_days(sprints), sprints)
 
-        return (self.monitor_days_in_sprint(sprint), sprint)
+    def graph_days(self, data_frames: List[pandas.DataFrame], sprints: List[Sprint]) -> None:
+        fig, ax = plt.subplots(
+            1, len(data_frames),
+            sharey='all',
+            figsize=(18, 10)  # [inch]
+        )
 
-    def graph_days_in_sprint(self, data_frame: pandas.DataFrame) -> None:
-        ax = plt.subplot()
+        for idx, data_frame in enumerate(data_frames):
+            ax[idx].set_title(f"({sprints[idx].id}) '{sprints[idx].name}'")
+            self._graph_days_in_sprint(data_frame, ax[idx])
+
+    def _graph_days_in_sprint(self, data_frame: pandas.DataFrame, ax) -> None:
+        y_labels = list(self.state_labels.keys())
+        y_values = list(self.state_labels.values())
+
+        x_labels = list(data_frame["date"])
+        x_values = range(0, len(list(data_frame["date"])))
 
         # For other color maps, see: https://matplotlib.org/stable/tutorials/colors/colormaps.html
         ax.set_prop_cycle(plt.cycler("color", plt.cm.tab20.colors))
-
-        y_values = list(self.lut.keys())
-        y_labels = list(self.lut.values())
-
-        x_values = list(data_frame["date"])
-        x_labels = range(0, len(list(data_frame["date"])))
 
         idx: Dict[Tuple[int, Any], int] = defaultdict(lambda: 0)
 
@@ -92,34 +111,48 @@ class ProgressMonitor:
             #     ax._get_lines.get_next_color()
 
             # For a regular plot, with overlapping lines, use:
-            # ax.plot(x_labels, values, marker='o', label=name, transform=trans3)
+            # ax.plot(x_values, values, marker='o', label=name, transform=trans3)
 
             # Shift data points:
             for x, value in enumerate(values):
-                shift = idx[(x_labels[x], value)]
+                shift = idx[(x_values[x], value)]
                 values[x] += shift * self.SHIFT_DISTANCE
-                idx[(x_labels[x], value)] += 1
+                idx[(x_values[x], value)] += 1
 
-            ax.plot(x_labels, values, label=name)
+            ax.plot(x_values, values, marker='.', label=name)
 
-        plt.grid(True)
+        ax.grid(True)
 
         # Show ticket labels at datapoints:
-        # self._annotate_with_ticket_ids(ax, data_frame, x_labels)
+        # self._annotate_with_ticket_ids(ax, data_frame, x_values)
 
         # Show ticket count at datapoints:
-        # self._annotate_with_ticket_count(ax, data_frame, x_labels)
+        # self._annotate_with_ticket_count(ax, data_frame, x_values)
 
-        plt.yticks(y_labels, y_values)
-        plt.xticks(x_labels, x_values, rotation=45)
+        ax.set_yticks(y_values)
+        ax.set_yticklabels(y_labels)
 
-        plt.legend(bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0)
+        ax.set_xticks(x_values)
 
-    def _annotate_with_ticket_count(self, ax, data_frame, x_labels) -> None:
+        x_labels = self._dates_to_weekday(x_labels)
+        ax.set_xticklabels(x_labels, rotation=45)
+
+        ax.legend(bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0, frameon=False)
+
+    def _dates_to_weekday(self, values: List[str]) -> List[str]:
+        weekdays: List[str] = []
+
+        for day in values:
+            tm = datetime.strptime(day, self.DATETIME_FORMAT)
+            weekdays.append(self.WEEKDAYS[tm.weekday()])
+
+        return weekdays
+
+    def _annotate_with_ticket_count(self, ax, data_frame, x_values) -> None:
         df_ticket_count = data_frame.drop("date", axis=1).apply(pandas.Series.value_counts, axis=1).fillna(0)
         columns = data_frame.columns.values[1:]
 
-        for x in x_labels:
+        for x in x_values:
             for col in columns:
                 y = data_frame[col][x]
 
@@ -132,10 +165,10 @@ class ProgressMonitor:
                     size=8
                 )
 
-    def _annotate_with_ticket_ids(self, ax, data_frame, x_labels) -> None:
+    def _annotate_with_ticket_ids(self, ax, data_frame, x_values) -> None:
         columns = data_frame.columns.values[1:]
 
-        for x in x_labels:
+        for x in x_values:
             label_jump: Dict[int, int] = defaultdict(lambda: 1)
             for col in columns:
                 y = data_frame[col][x]

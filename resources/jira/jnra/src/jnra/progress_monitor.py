@@ -93,6 +93,8 @@ class ProgressMonitor:
             sharey='all',
             figsize=(18, 10)  # [inch]
         )
+        plt.subplots_adjust(wspace = 0.05)
+        plt.rcParams["font.family"] = "monospace"
 
         for idx, data_frame in enumerate(data_frames):
             ax[idx].set_title(f"({sprints[idx].id}) '{sprints[idx].name}'")
@@ -143,7 +145,7 @@ class ProgressMonitor:
         x_labels = self._dates_to_weekday(x_labels)
         ax.set_xticklabels(x_labels, rotation=45)
 
-        ax.legend(bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0, frameon=False)
+        ax.legend(loc="upper left", facecolor='white', framealpha=1)
 
     def _dates_to_weekday(self, values: List[str]) -> List[str]:
         weekdays: List[str] = []

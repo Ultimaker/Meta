@@ -69,7 +69,7 @@ class ProgressMonitor:
         row: Dict[str, Union[str, int]] = {"date": today}
         print(f"({today}) Tickets in sprint:")
 
-        for issue in issues[1:]:
+        for issue in issues:
             print(f"\t({issue.key}) '{issue.fields.summary}'")
 
             status = self.lookup_states.get(issue.fields.status.name.lower(), -1)
@@ -80,7 +80,7 @@ class ProgressMonitor:
             row[issue.key] = status
 
         data_frame = data_frame.append(row, ignore_index=True).fillna(self.DEFAULT_LANE)
-        self.write_dataframe(sprint.id, data_frame)
+        # self.write_dataframe(sprint.id, data_frame)
         return data_frame
 
     def monitor_days_in_active_sprints(self, board_id: int) -> Tuple[List[pandas.DataFrame], List[Sprint]]:

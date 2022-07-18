@@ -28,7 +28,7 @@ class JiraSDK():
             num_boards += len(all_boards)
             total_boards = all_boards.total
 
-        print(f"Found '{len(boards)}' boards")
+        print(f"Found {len(boards)} boards")
         for board in boards:
             print(f"\t({board.id}) '{board.name}'")
 
@@ -53,6 +53,7 @@ class JiraSDK():
         for sprint in sprints:
             print(f"\t({sprint.id}) '{sprint.name}'")
 
+
         return sprints
 
     def grab_issues(self, jql: str) -> List[Issue]:
@@ -72,6 +73,7 @@ class JiraSDK():
             num_issues += len(all_issues)
             total = all_issues.total
 
+        print(f"Found {len(issues)}/{total} issues")
         return issues
 
 
